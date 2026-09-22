@@ -1,0 +1,1 @@
+{"seed": 42, "outer_folds": 7, "inner_folds": 6, "strata": "diagnosis x cohort", "groups": "ddr_dup_groups.csv"}

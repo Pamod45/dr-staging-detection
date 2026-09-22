@@ -1,0 +1,22 @@
+{
+ "backbone": "effnetv2b0",
+ "unfrozen": 0.5,
+ "lr": 0.0001,
+ "arm": "none",
+ "img_size": 512,
+ "batch": 32,
+ "schedule": "plateau f0.3 p2 + early stop p4",
+ "seed": 42,
+ "focal_gamma": 2.0,
+ "alpha": [
+  0.37801395538866056,
+  1.0237004206779248,
+  0.38961754849012864,
+  2.42874486978134,
+  0.7799232056619457
+ ],
+ "candidates": {
+  "focal": 0.8681981550162188,
+  "focal_alpha": 0.8521724423003055
+ }
+}

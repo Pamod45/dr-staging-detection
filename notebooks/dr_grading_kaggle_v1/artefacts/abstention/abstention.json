@@ -1,0 +1,5 @@
+{
+  "measure": "max softmax",
+  "threshold": 0.5496,
+  "target_accuracy": 0.90
+}

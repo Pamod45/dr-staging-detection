@@ -1,0 +1,7 @@
+{
+  "referral_threshold": 0.25,
+  "sensitivity_floor": 0.95,
+  "f1_tuned_weights": [0.632, 1.0, 1.0, 1.0, 0.632],
+  "qwk_tuned_weights": [0.795, 0.795, 1.0, 1.26, 0.502],
+  "adopted": "referral_threshold only; per-class weights rejected"
+}

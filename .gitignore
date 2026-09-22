@@ -5,3 +5,4 @@ __pycache__/
 *.pyc
 .kaggle/
 kaggle.json
+*.h5
