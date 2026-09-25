@@ -4,7 +4,6 @@ from pathlib import Path
 ROOT = Path(".")
 SHARED = ROOT / "models/_shared"
 
-# --- build the label arrays from the split files -------------------
 v1 = pd.read_csv(SHARED / "ddr_splits.csv")
 v2 = pd.read_csv(SHARED / "ddr_splits_7x6.csv")
 
@@ -14,10 +13,9 @@ np.save(SHARED / "test_labels_v1.npy",
         v1.loc[v1["split"] == "test", "diagnosis"].to_numpy())
 np.save(SHARED / "test_labels_v2.npy",
         v2.loc[v2["split"] == "test", "diagnosis"].to_numpy())
-print("val rows v1:", len(y_val_v1))          # expect 1792
+print("val rows v1:", len(y_val_v1))
 
-# --- check every v1 folder ----------------------------------------
-expected = {                                   # peak val QWK from the notebook tables
+expected = {
     "v1_res_224": 0.8178, "v1_res_380": 0.8478, "v1_res_512": 0.8603,
     "v1_oversampled_512": 0.8601, "v1_bal_focal_512": 0.8769,
     "v1_focal_512": 0.8682, "v1_focal_alpha_512": 0.8522,

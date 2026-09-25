@@ -1,9 +1,11 @@
 data/
 models/
 .ipynb_checkpoints/
+.pytest_cache/
 __pycache__/
 *.pyc
 .kaggle/
 kaggle.json
 *.h5
 .venv
+APP_PLAN.md

@@ -3,7 +3,7 @@ from pathlib import Path
 
 ROOT = Path(".")
 y = np.load(ROOT / "models/_shared/test_labels_v2.npy")
-print("v2 test rows:", len(y))                 # expect 1788
+print("v2 test rows:", len(y))
 
 for name in ["v2_512_2000", "v2_512_full", "v2_512_merged",
              "v2_768_best", "v2_768_qwk"]:
