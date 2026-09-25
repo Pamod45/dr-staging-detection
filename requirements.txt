@@ -1,8 +1,11 @@
+# Pinned to the versions that trained the weights (TF 2.20 / Keras 3.13).
+# Use Python 3.11 or 3.12 - TensorFlow has no wheels for 3.14.
 tensorflow==2.20.0
+keras==3.13.2          # the version that trained the v2 weights
 opencv-python-headless==4.10.0.84
 numpy>=1.26,<2.2
 pandas>=2.1
-streamlit>=1.50
+streamlit>=1.50        # needs width="stretch" and st.navigation
 matplotlib>=3.8
 pillow>=10.0
 fpdf2>=2.7

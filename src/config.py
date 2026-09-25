@@ -20,13 +20,8 @@ REFERABLE_GRADES = (2, 3, 4)
 
 SCREENING_MODEL_ID = "v2_768_best"
 
-# Inherited from the v1 focal model (fitted on v1 validation). NOT yet refitted for the
-# v2 screening model - every page that shows it must say so.
-REFERRAL_THRESHOLD = 0.25
-REFERRAL_FITTED_FOR_SCREENING_MODEL = False
-
-# Deferred until v2 validation probabilities exist. None = abstention switched off.
-ABSTENTION_THRESHOLD = None
+# Referral and abstention thresholds are NOT set here: they are read from the screening
+# model's own results.json (fitted on its validation set in the v2 notebook). See decisions.py.
 
 # Run-to-run QWK spread measured in v1 sections 5.1-5.4; shown on comparison captions.
 NOISE_FLOOR_QWK = 0.008

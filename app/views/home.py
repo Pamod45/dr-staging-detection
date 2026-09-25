@@ -1,5 +1,5 @@
 """About diabetic retinopathy - background for a non-specialist. No performance numbers here.
-Written content from content/dr_facts.md and sample images are added from notebook stage 6.
+Written content from content/dr_facts.md and sample images are added in stage 6.
 """
 import streamlit as st
 

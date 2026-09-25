@@ -8,6 +8,7 @@ from streamlit.testing.v1 import AppTest
 
 from src import config as C
 from src import state
+from tests.helpers import fake_model_folder, fake_result
 
 MAIN = str(Path(__file__).resolve().parents[1] / "app" / "main.py")
 VIEWS = ["home", "screening", "how_built", "results", "comparison"]
@@ -20,10 +21,20 @@ def _sample_image():
     return state.decode(buf.tobytes(), "sample.png")
 
 
-def _app(view, with_image=False):
+@pytest.fixture(autouse=True)
+def isolated_models(tmp_path, monkeypatch):
+    """Pages never touch the real models/ folder or load TensorFlow in these tests."""
+    monkeypatch.setattr(C, "MODELS_DIR", tmp_path)
+    return tmp_path
+
+
+def _app(view, with_image=False, result=None):
     at = AppTest.from_file(MAIN, default_timeout=30)
     if with_image:
-        at.session_state["shared_image"] = _sample_image()
+        img = _sample_image()
+        at.session_state["shared_image"] = img
+        if result is not None:
+            at.session_state["per_image_cache"] = {"screening": {img.sha256: result}}
     at.run()
     at.switch_page(f"views/{view}.py").run()
     return at
@@ -73,3 +84,22 @@ def test_no_build_notes_shown_to_users(view):
     for text in shown:
         low = str(text).lower()
         assert not any(w in low for w in DEV_WORDS), (view, text)
+
+
+def test_screening_shows_missing_model_error(isolated_models):
+    at = _app("screening", with_image=True)
+    assert any("could not be found" in e.value for e in at.error)
+
+
+@pytest.mark.parametrize("probs,abst,grade_text,ref_text", [
+    ([0.05, 0.05, 0.7, 0.1, 0.1], None, "Moderate", "Refer to eye specialist"),
+    ([0.9, 0.08, 0.01, 0.005, 0.005], None, "No DR", "No referral needed"),
+    ([0.3, 0.3, 0.2, 0.1, 0.1], 0.5, "Not graded", "Refer to eye specialist"),
+])
+def test_screening_renders_a_result(isolated_models, probs, abst, grade_text, ref_text):
+    fake_model_folder(isolated_models)
+    at = _app("screening", with_image=True, result=fake_result(probs, abstention=abst))
+    assert not at.exception, at.exception
+    text = " ".join(m.value for m in at.markdown)
+    assert grade_text in text and ref_text in text
+    assert len(at.get("download_button")) == 1
