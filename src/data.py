@@ -63,3 +63,14 @@ def strategy_histories() -> dict[str, pd.DataFrame]:
         df.insert(0, "epoch", np.arange(1, len(df) + 1))
         out[name] = df
     return out
+
+
+# IDRiD grade counts after the 27 label corrections, from the support column of the v2
+# notebook's IDRiD classification report (section 6.2). No IDRiD label file is in models/.
+IDRID_COUNTS = {0: 118, 1: 23, 2: 164, 3: 90, 4: 60}
+
+
+def ddr_grade_counts() -> pd.DataFrame:
+    """Images per grade and split in the final notebook's DDR split."""
+    split = pd.read_csv(C.SPLIT_FILES["v2"])
+    return split.groupby(["diagnosis", "split"]).size().rename("images").reset_index()

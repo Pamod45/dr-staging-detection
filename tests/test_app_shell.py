@@ -72,7 +72,11 @@ def test_every_comparison_renders():
         assert not at.exception, (C.COMPARISONS[i].id, at.exception)
 
 
-DEV_WORDS = ("stage", "prototype", "coursework", "placeholder", "todo", "coming soon")
+import re
+
+# "stage" alone is ordinary English ("later stages of the disease"); a numbered build stage
+# is what must never reach the screen.
+DEV_PATTERN = re.compile(r"\bstage \d|prototype|coursework|placeholder|\btodo\b|coming soon")
 
 
 @pytest.mark.parametrize("view", VIEWS)
@@ -82,8 +86,7 @@ def test_no_build_notes_shown_to_users(view):
     shown = [e.value for kind in ("title", "subheader", "markdown", "caption", "info",
                                   "warning", "error") for e in getattr(at, kind)]
     for text in shown:
-        low = str(text).lower()
-        assert not any(w in low for w in DEV_WORDS), (view, text)
+        assert not DEV_PATTERN.search(str(text).lower()), (view, text)
 
 
 def test_screening_shows_missing_model_error(isolated_models):
