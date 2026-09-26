@@ -62,3 +62,54 @@ def to_model_input(img_bgr: np.ndarray, size: int) -> np.ndarray:
     if img_bgr.shape[0] != size:
         img_bgr = cv2.resize(img_bgr, (size, size), interpolation=cv2.INTER_AREA)
     return cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB).astype(np.float32)
+
+
+def geom_eval(img: np.ndarray, out: int) -> np.ndarray:
+    """v1 notebook geom() on its evaluation path (no rotation, no flip, INTER_AREA). v1 models
+    were fed the 512 px cache through this warp, then re-masked, at every input size."""
+    src = img.shape[0]
+    k = out / src
+    m = cv2.getRotationMatrix2D((src / 2, src / 2), 0.0, k)
+    m[0, 2] += out / 2 - src / 2
+    m[1, 2] += out / 2 - src / 2
+    o = cv2.warpAffine(np.ascontiguousarray(img), m, (out, out), flags=cv2.INTER_AREA,
+                       borderValue=(0, 0, 0))
+    o[~circle_mask(out)] = 0
+    return o
+
+
+def preprocess_steps(img: np.ndarray, out: int) -> dict | None:
+    """The same steps as preprocess(), keeping each intermediate image for display.
+    The 'final' image is identical to preprocess(img, out)[0]; a test checks this."""
+    fov = detect_fov(img)
+    if fov is None:
+        return None
+    r = fov.r * MASK_FRAC
+    side = int(round(2 * r))
+    x0, y0 = int(round(fov.cx - r)), int(round(fov.cy - r))
+    crop = np.zeros((side, side, 3), np.uint8)
+    sx0, sy0 = max(x0, 0), max(y0, 0)
+    sx1, sy1 = min(x0 + side, img.shape[1]), min(y0 + side, img.shape[0])
+    crop[sy0 - y0:sy1 - y0, sx0 - x0:sx1 - x0] = img[sy0:sy1, sx0:sx1]
+    masked = crop.copy()
+    masked[~circle_mask(side)] = 0
+    interp = cv2.INTER_AREA if side > out else cv2.INTER_CUBIC
+    return {
+        "fov": fov,
+        "side": side,
+        "interp": "area averaging" if interp == cv2.INTER_AREA else "cubic",
+        "crop": crop,
+        "masked": masked,
+        "final": cv2.resize(masked, (out, out), interpolation=interp),
+    }
+
+
+def draw_fov(img: np.ndarray, fov: Fov, mask_frac: float = MASK_FRAC) -> np.ndarray:
+    """Detected disc (green) and the mask circle actually kept (blue) on a copy of the image."""
+    out = img.copy()
+    t = max(2, int(max(img.shape[:2]) / 250))
+    centre = (int(round(fov.cx)), int(round(fov.cy)))
+    cv2.circle(out, centre, int(round(fov.r)), (80, 200, 80), t)
+    cv2.circle(out, centre, int(round(fov.r * mask_frac)), (199, 163, 79), t)
+    cv2.drawMarker(out, centre, (80, 200, 80), cv2.MARKER_CROSS, 6 * t, t)
+    return out

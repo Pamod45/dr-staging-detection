@@ -1,4 +1,4 @@
-"""Rebuild a v2 model and load its weights (v2 notebook 4.1 and 5.3)."""
+"""Rebuild a trained model and load its weights: v2 notebook 4.1 and 5.3, v1 notebook 4.1."""
 import json
 from dataclasses import dataclass
 
@@ -76,3 +76,35 @@ def load(model_id: str):
     set_saved_state(base, arch.unfreeze)
     model.load_weights(str(weights))
     return model, base, arch
+
+
+def build_v1(size: int, dropout: float = 0.3):
+    """v1 notebook build_model('effnetv2b0'): pooling, dropout and the output layer only."""
+    import keras
+    from keras import layers
+
+    inp = keras.Input((size, size, 3), name="raw_rgb_0_255")
+    base = keras.applications.EfficientNetV2B0(include_top=False, weights=None,
+                                               input_shape=(size, size, 3),
+                                               include_preprocessing=True)
+    x = base(inp, training=False)
+    x = layers.GlobalAveragePooling2D(name="gap")(x)
+    x = layers.Dropout(dropout, name="drop")(x)
+    out = layers.Dense(C.N_CLASSES, activation="softmax", dtype="float32", name="grade")(x)
+    return keras.Model(inp, out, name="effnetv2b0_dr"), base
+
+
+def load_any(model_id: str):
+    """(model, base, input_size) for a model from either notebook."""
+    spec = C.MODELS[model_id]
+    if spec.needs_clahe:
+        raise ValueError(f"{model_id} needs the CLAHE step, which the app does not port")
+    if spec.notebook == "v2":
+        model, base, arch = load(model_id)
+        return model, base, arch.input_size
+    weights = registry.find_weights(model_id)
+    if weights is None:
+        raise FileNotFoundError(f"no weights found in models/{model_id}")
+    model, base = build_v1(spec.input_size)
+    model.load_weights(str(weights))
+    return model, base, spec.input_size

@@ -19,17 +19,6 @@ class Decision:
     figure: Path | None = None
     models: tuple = field(default_factory=tuple)
     lr_chart: bool = False
-
-@dataclass(frozen=True)
-class Decision:
-    title: str
-    question: str
-    tested: str
-    decided: str
-    cost: str
-    figure: Path | None = None
-    models: tuple = field(default_factory=tuple)
-    lr_chart: bool = False
     qwk_curves: bool = False
 
 
@@ -56,7 +45,7 @@ TRAIL = [
         "None in accuracy. No correction also trained faster, 63 seconds per epoch against 90.",
         figure=F1 / "sec2.4_normalisation_candidates_per_grade.png",
     ),
-       Decision(
+    Decision(
         "Augmentation",
         "Which random changes should training images get, and how strong?",
         "Rotation at any angle, horizontal and vertical flips, zoom 0.90 to 1.10, and small "

@@ -4,7 +4,7 @@ from datetime import datetime
 import streamlit as st
 
 from src import config as C
-from src import registry, state, ui
+from src import engines, registry, state, ui
 from src.charts import probability_chart
 from src.explanation import explain, pct, threshold_pct
 
@@ -13,12 +13,6 @@ ui.page_header(
     "Upload one retinal photograph. The model grades it on the five-step ICDR scale "
     "and says whether it should be referred to an eye specialist.",
 )
-
-
-@st.cache_resource(show_spinner="Loading the grading model...")
-def get_engine():
-    from src.inference import ScreeningEngine
-    return ScreeningEngine()
 
 
 def render():
@@ -49,7 +43,7 @@ def render():
         from src.inference import NoRetinaFound
         try:
             with st.spinner("Grading the image..."):
-                result = get_engine().run(img.image_bgr)
+                result = engines.screening_engine().run(img.image_bgr)
         except NoRetinaFound:
             st.error("No retina could be found in this image. Upload a colour fundus photograph "
                      "with the round retinal area visible on a dark background.")

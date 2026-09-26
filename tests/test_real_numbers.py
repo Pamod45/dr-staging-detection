@@ -40,3 +40,13 @@ def test_v1_resolution_qwk_matches_notebook():
     got = [metrics.summary(data.labels(m), data.probs(m))["QWK"]
            for m in ("v1_res_224", "v1_res_380", "v1_res_512")]
     assert np.allclose(got, [0.8178, 0.8478, 0.8603], atol=5e-5)
+
+
+@needs("v1_res_224", "v1_res_380", "v1_res_512", "v1_oversampled_512", "v1_bal_focal_512")
+def test_v1_epochs_match_notebook_tables():
+    from src import model_info
+    want = {"v1_res_224": ("15", "11"), "v1_res_380": ("13", "9"), "v1_res_512": ("18", "14"),
+            "v1_oversampled_512": ("17", "13"), "v1_bal_focal_512": ("20", "16")}
+    for m, (run, best) in want.items():
+        s = model_info.settings(m)
+        assert (s["Epochs run"], s["Best epoch"]) == (run, best), m

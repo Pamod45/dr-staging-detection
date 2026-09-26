@@ -135,3 +135,19 @@ def schedule_chart(histories: dict) -> alt.Chart:
     rules = alt.Chart(pd.DataFrame(cuts)).mark_rule(strokeDash=[4, 4]).encode(
         x="epoch:Q", tooltip=["Cut"], color=alt.value("#9AA7B0"))
     return (lines + rules).properties(height=300)
+
+
+def metric_bars(rows: list[dict], metrics_: tuple = ("QWK", "Macro F1")) -> alt.Chart:
+    df = pd.DataFrame([{"Model": r["Model"], "Metric": m, "Value": r[m]}
+                       for r in rows for m in metrics_])
+    order = [r["Model"] for r in rows]
+    bars = alt.Chart(df).mark_bar(cornerRadiusEnd=3).encode(
+        x=alt.X("Model:N", sort=order, title=None, axis=alt.Axis(labelAngle=0, labelLimit=160)),
+        xOffset=alt.XOffset("Metric:N"),
+        y=alt.Y("Value:Q", title=None, scale=alt.Scale(domain=[0, 1])),
+        color=alt.Color("Metric:N", legend=alt.Legend(orient="bottom", title=None)),
+        tooltip=["Model", "Metric", alt.Tooltip("Value:Q", format=".4f")],
+    )
+    text = bars.mark_text(dy=-6, fontSize=11).encode(text=alt.Text("Value:Q", format=".3f"),
+                                                     color=alt.value("#E3EAEE"))
+    return (bars + text).properties(height=280)
