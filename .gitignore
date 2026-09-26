@@ -9,3 +9,4 @@ kaggle.json
 *.h5
 .venv
 APP_PLAN.md
+.streamlit/secrets.toml

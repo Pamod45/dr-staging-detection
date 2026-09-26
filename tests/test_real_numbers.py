@@ -50,3 +50,14 @@ def test_v1_epochs_match_notebook_tables():
     for m, (run, best) in want.items():
         s = model_info.settings(m)
         assert (s["Epochs run"], s["Best epoch"]) == (run, best), m
+
+
+@needs("v2_768_best")
+def test_reliability_counts_add_up_on_real_data():
+    from src import trust
+    y, p = data.labels("v2_768_best"), data.probs("v2_768_best")
+    for g in range(5):
+        r = trust.reliability(y, p, g, 0.75, True, 0.35)
+        assert r["grade_calls"] == sum(r["grade_truths"].values()) == int((p.argmax(1) == g).sum())
+    r = trust.reliability(y, p, 2, 0.75, True, 0.35)
+    assert r["referral_calls"] == 858    # 47.99% of 1,788 referred at 0.35, notebook 6.5

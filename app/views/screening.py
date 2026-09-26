@@ -31,6 +31,7 @@ def render():
 
     img = state.get_image()
     if img is None:
+        chat_section(None)
         return
 
     if registry.check_model(C.SCREENING_MODEL_ID)["status"] != "ok":
@@ -104,6 +105,82 @@ def render():
     st.download_button("Download report (PDF)", data=report[0], file_name=report[1],
                        mime="application/pdf", icon=":material/download:")
     st.caption(f"Graded in {result.seconds:.1f} s")
+    chat_section(result)
+
+
+def _history(result) -> list:
+    """Per-image history once a photograph is graded; one general thread before that."""
+    if result is None:
+        return st.session_state.get("chat_general", [])
+    return state.cache_get("chat") or []
+
+
+def _save(result, history: list) -> None:
+    if result is None:
+        st.session_state["chat_general"] = history
+    else:
+        state.cache_set("chat", history)
+
+
+def chat_section(result) -> None:
+    from src import chat
+
+    if result is None:
+        st.subheader("Ask about diabetic retinopathy")
+        st.caption("Upload a photograph above to ask about its result as well.")
+    else:
+        st.subheader("Ask about this result")
+    key = chat.api_key()
+    if not key:
+        st.info("The question assistant is not available on this server.")
+        return
+
+    history = _history(result)
+    for m in history:
+        with st.chat_message("user" if m["role"] == "user" else "assistant"):
+            st.markdown(m["text"])
+
+    used = chat.questions_used(history)
+    scope = "this image" if result is not None else "this session"
+    left, right = st.columns([4, 1])
+    with left:
+        st.caption(f"{used} of {chat.MAX_QUESTIONS} questions used for {scope}. Answers are "
+                   "generated from the About page text" + (" and this result" if result else "")
+                   + ", and are not checked line by line. They are not medical advice.")
+    with right:
+        if history and st.button("Clear chat", icon=":material/delete:", width="stretch"):
+            _save(result, [])
+            st.rerun()
+
+    if used >= chat.MAX_QUESTIONS:
+        st.info(f"The question limit for {scope} has been reached. Clear the chat to start again.")
+        return
+
+    options = chat.SUGGESTED if result is not None else chat.SUGGESTED_GENERAL
+    suggested = None
+    st.caption("Try one of these, or type your own:")
+    cols = st.columns(len(options))
+    for i, (col, q) in enumerate(zip(cols, options)):
+        if col.button(q, key=f"suggest_{'r' if result else 'g'}_{i}", width="stretch"):
+            suggested = q
+    placeholder = ("Ask about this result, or about diabetic retinopathy" if result is not None
+                   else "Ask about diabetic retinopathy or this tool")
+    question = st.chat_input(placeholder) or suggested
+    if not question:
+        return
+    with st.chat_message("user"):
+        st.markdown(question)
+    try:
+        with st.spinner("Thinking..."):
+            answer = chat.reply(chat.make_client(key), chat.system_prompt(result), history,
+                                question)
+    except Exception as err:
+        print(f"[chat] {type(err).__name__}: {err}")
+        st.error(f"The assistant could not answer: {chat.error_message(err)}")
+        return
+    _save(result, history + [{"role": "user", "text": question},
+                             {"role": "model", "text": answer}])
+    st.rerun()
 
 
 render()
