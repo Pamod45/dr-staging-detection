@@ -95,7 +95,7 @@ def page(tmp_path, monkeypatch):
 
 
 def test_no_key_hides_the_chat(page, monkeypatch):
-    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.setattr(chat, "api_key", lambda: None)
     at, _ = page()
     assert not at.exception, at.exception
     assert len(at.chat_input) == 0
