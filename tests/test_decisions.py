@@ -1,4 +1,4 @@
-"""Decision rules at their boundaries. Exact binary fractions avoid float rounding noise."""
+"""Decision rules at their boundaries."""
 import json
 
 import pytest

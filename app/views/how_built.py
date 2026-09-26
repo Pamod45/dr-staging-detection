@@ -1,4 +1,4 @@
-"""How it was built - four visual pipelines for the shipped v2 model only (built in stage 5)."""
+"""How it was built page."""
 import streamlit as st
 
 from src import config as C

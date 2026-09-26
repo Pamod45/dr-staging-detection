@@ -1,4 +1,4 @@
-"""Every page renders without error through the real navigation, with and without an image."""
+"""Pages render through the real navigation."""
 from pathlib import Path
 
 import cv2

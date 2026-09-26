@@ -1,21 +1,13 @@
-"""Retina crop and mask - a port of v2 notebook section 2.1.
-
-The only change from the notebook: `preprocess` takes a decoded BGR array instead of a file
-path, because the app receives uploaded bytes. Everything else is line-for-line the same, and
-must stay that way: the model was trained on images produced by exactly these steps.
-
-    detect_fov   find the retinal disc on a 512 px working copy
-    preprocess   square crop at 0.95 of the disc radius, black outside the circle,
-                 then ONE resize to the output size
-"""
+"""Retina crop and mask, ported from v2 notebook section 2.1. Must stay identical to the
+notebook: the model only ever saw images produced by exactly these steps."""
 from dataclasses import dataclass
 
 import cv2
 import numpy as np
 
-MASK_FRAC = 0.95       # notebook Config.MASK_FRAC
-FOV_THRESH = 12        # a pixel counts as retina if any channel is above this
-FOV_WORK = 512         # detection runs on a copy this size, for speed
+MASK_FRAC = 0.95
+FOV_THRESH = 12
+FOV_WORK = 512
 
 
 @dataclass(frozen=True)
@@ -29,12 +21,14 @@ class Fov:
 def detect_fov(img: np.ndarray, thresh: int = FOV_THRESH, work: int = FOV_WORK) -> Fov | None:
     s = work / max(img.shape[:2])
     sm = cv2.resize(img, None, fx=s, fy=s, interpolation=cv2.INTER_AREA)
+    # brightest channel, not grey: IDRiD's blue channel is so dark that a grey threshold
+    # cuts into the retina
     m = (sm.max(2) > thresh).astype(np.uint8)
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
     cnts, _ = cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if not cnts:
         return None
-    # largest external contour: a camera notch or stray bright pixel can't win over the disc
+    # largest contour, so the camera's marker notch cannot win over the disc
     x, y, w, h = cv2.boundingRect(max(cnts, key=cv2.contourArea))
     return Fov((x + w / 2) / s, (y + h / 2) / s, max(w, h) / 2 / s)
 
@@ -64,8 +58,7 @@ def preprocess(img: np.ndarray, out: int, mask_frac: float = MASK_FRAC):
 
 
 def to_model_input(img_bgr: np.ndarray, size: int) -> np.ndarray:
-    """Notebook load_image (eval path) + predict_single_image: resize only if needed,
-    BGR -> RGB, float32 in 0-255. No division: normalisation is inside the model."""
+    """Resize if needed, BGR to RGB, float32 in 0-255."""
     if img_bgr.shape[0] != size:
         img_bgr = cv2.resize(img_bgr, (size, size), interpolation=cv2.INTER_AREA)
     return cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB).astype(np.float32)

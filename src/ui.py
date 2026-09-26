@@ -1,4 +1,4 @@
-"""Small UI pieces reused by every page, so all five pages look and behave the same."""
+"""UI helpers shared by all pages."""
 import streamlit as st
 
 from src import config as C

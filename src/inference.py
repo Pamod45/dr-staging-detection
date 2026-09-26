@@ -1,9 +1,4 @@
-"""ScreeningEngine: photograph in, everything the Screening page shows out.
-
-    preprocess -> model -> decisions -> Grad-CAM -> overlay + attention summary
-
-Loaded once per server process (the page caches it with st.cache_resource).
-"""
+"""Screening engine: preprocess, predict, decide, Grad-CAM."""
 import time
 from dataclasses import dataclass
 
@@ -13,7 +8,7 @@ from src import config as C
 from src import decisions, gradcam, model
 from src.preprocess import preprocess, to_model_input
 
-CAM_TOLERANCE = 2e-3   # notebook 6.3 assert: Grad-CAM path must reproduce the model's output
+CAM_TOLERANCE = 2e-3   # same tolerance as the notebook 6.3 assert
 
 
 class NoRetinaFound(ValueError):

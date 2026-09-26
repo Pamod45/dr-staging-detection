@@ -1,4 +1,4 @@
-"""Screening - owns the shared upload and runs the final model on it."""
+"""Screening page."""
 from datetime import datetime
 
 import streamlit as st
@@ -54,7 +54,7 @@ def render():
             st.error("No retina could be found in this image. Upload a colour fundus photograph "
                      "with the round retinal area visible on a dark background.")
             return
-        except Exception as err:   # model or Grad-CAM failure: say so, never show a partial result
+        except Exception as err:
             st.error(f"The image could not be graded: {err}")
             return
         state.cache_set("screening", result)

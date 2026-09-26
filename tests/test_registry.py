@@ -1,4 +1,4 @@
-"""Config rules and file checks. No Streamlit, no TensorFlow."""
+"""Config rules and model folder checks."""
 import pytest
 
 from src import config as C

@@ -1,12 +1,9 @@
-"""Entry point.  Run from the repo root:   streamlit run app/main.py
-
-Builds the navigation, draws the shared sidebar, runs the selected page, then the
-disclaimer. Pages live in app/views/ (not app/pages/, which Streamlit would try to
-auto-load as a second navigation system).
-"""
+"""Entry point: streamlit run app/main.py"""
 import sys
 from pathlib import Path
 
+# Streamlit adds app/ to sys.path, not the repo root, so `import src` needs this.
+# Pages live in app/views/: an app/pages/ folder would be auto-loaded as a second menu.
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))

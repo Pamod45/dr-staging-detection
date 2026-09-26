@@ -1,8 +1,4 @@
-"""One-page PDF report for a screening result.
-
-Contains only things the page shows and the template text - never chat text. Records the model
-id and the thresholds actually used, so the file stands on its own later.
-"""
+"""One-page PDF report for a screening result."""
 import io
 from datetime import datetime
 

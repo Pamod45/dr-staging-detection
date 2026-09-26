@@ -1,15 +1,4 @@
-"""Rebuild a trained model exactly and load its weights - port of v2 notebook 4.1 and 5.3.
-
-Two traps that load without an error and then give wrong answers:
-
-1. Layer names must match the notebook (gap, head_bn, drop_1, dense_256, drop_2, grade).
-   Keras 3 stores weights by layer path, so a renamed layer is a layer with no weights.
-2. The backbone must be in the state it was saved in: trainable, with the lower half frozen
-   (notebook 5.3). We reproduce that before loading so the file and the model line up.
-
-Normalisation lives inside the backbone (include_preprocessing=True), so the input is raw RGB
-float32 in 0-255. No mixed precision here: it was a GPU speed setting for training.
-"""
+"""Rebuild a v2 model and load its weights (v2 notebook 4.1 and 5.3)."""
 import json
 from dataclasses import dataclass
 
@@ -42,18 +31,21 @@ def architecture(model_id: str) -> Architecture:
 
 
 def build(arch: Architecture, backbone_weights=None):
-    """Notebook build_model, unchanged apart from taking settings as an argument.
-    backbone_weights=None skips the ImageNet download; load_weights overwrites them anyway."""
+    """Notebook build_model with settings passed in. backbone_weights=None skips the
+    ImageNet download, since load_weights overwrites every weight anyway."""
     import keras
     from keras import layers
 
     size = arch.input_size
+    # Layer names must match the notebook: Keras 3 stores weights by layer path, and a
+    # renamed layer silently keeps random weights. Input is raw RGB 0-255 because
+    # include_preprocessing=True puts normalisation inside the backbone.
     inp = keras.Input((size, size, 3), name="rgb_0_255")
     base = keras.applications.EfficientNetV2B0(include_top=False, weights=backbone_weights,
                                                input_shape=(size, size, 3),
                                                include_preprocessing=True)
     base.trainable = False
-    x = base(inp, training=False)          # training=False keeps BatchNorm statistics frozen
+    x = base(inp, training=False)
     x = layers.GlobalAveragePooling2D(name="gap")(x)
     if arch.head == "dense":
         x = layers.BatchNormalization(name="head_bn")(x)

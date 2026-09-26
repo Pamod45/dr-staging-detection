@@ -1,13 +1,4 @@
-"""The one uploaded image, shared by every page for the whole browser session.
-
-Screening owns the upload. Other pages read it. Nothing is written to disk and there are
-no users - Streamlit's session_state lives only as long as the browser tab.
-
-Why an explicit 'Clear image' instead of reacting to an empty uploader: Streamlit drops a
-widget's value when you navigate to another page, so the uploader comes back empty even
-though the image is still wanted. Clearing is therefore a deliberate button, and the
-uploader is reset by changing its key (the nonce below).
-"""
+"""Shared uploaded image and per-image cache in session state."""
 import hashlib
 from dataclasses import dataclass
 
@@ -49,7 +40,7 @@ def get_image() -> SharedImage | None:
 
 
 def set_image(img: SharedImage) -> bool:
-    """Store a new image. Returns True if it replaced a different one (or none)."""
+    """Store a new image; True if it replaced a different one."""
     current = get_image()
     if current is not None and current.sha256 == img.sha256:
         return False
@@ -58,7 +49,9 @@ def set_image(img: SharedImage) -> bool:
 
 
 def clear_image() -> None:
-    """Forget the image and everything derived from it, and reset the uploader widget."""
+    """Forget the image and everything derived from it, and reset the uploader widget.
+    Clearing is an explicit button because Streamlit empties the uploader whenever the
+    user changes page, so an empty uploader does not mean the image is unwanted."""
     st.session_state.pop(_IMAGE_KEY, None)
     st.session_state[_CACHE_KEY] = {}
     st.session_state[_NONCE_KEY] = st.session_state.get(_NONCE_KEY, 0) + 1

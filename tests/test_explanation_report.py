@@ -1,4 +1,4 @@
-"""Template text and PDF report."""
+"""Explanation text and PDF report."""
 from src.explanation import explain, threshold_pct
 from src.report import build_pdf
 from tests.helpers import fake_result

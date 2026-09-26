@@ -1,11 +1,6 @@
-"""Optional: does the app reproduce the notebook on real test images?
+"""Compare the app's predictions with the notebook's stored test probabilities.
 
-    python scripts/check_screening.py --ddr "<folder with raw DDR jpgs>" --n 10
-
-Runs the app's engine on the first N DDR test images (v2 split order) and compares with the
-notebook's stored probs_test.npy. Expect small differences: the notebook read JPEG-cached
-images on a GPU in float16; the app reads raw images on CPU in float32. What must match is
-the decisions: grade and referral.
+    python scripts/check_screening.py --ddr "<raw DDR folder>" --n 10
 """
 import argparse
 import sys

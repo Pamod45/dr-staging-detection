@@ -1,8 +1,4 @@
-"""All constants for the app in one place. No other module should hard-code a path,
-a label, a threshold or a model id - import it from here.
-
-Mirrors APP_PLAN.md sections 3 and 8. If the two disagree, fix one of them.
-"""
+"""App constants: paths, labels, models and comparisons."""
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -20,10 +16,7 @@ REFERABLE_GRADES = (2, 3, 4)
 
 SCREENING_MODEL_ID = "v2_768_best"
 
-# Referral and abstention thresholds are NOT set here: they are read from the screening
-# model's own results.json (fitted on its validation set in the v2 notebook). See decisions.py.
 
-# Run-to-run QWK spread measured in v1 sections 5.1-5.4; shown on comparison captions.
 NOISE_FLOOR_QWK = 0.008
 
 WEIGHT_CANDIDATES = ("model.weights.h5", "best.weights.h5", "best_qwk.weights.h5")
@@ -114,19 +107,3 @@ COMPARISONS_BY_ID = {c.id: c for c in COMPARISONS}
 
 DISCLAIMER = ("For research and education. Not a diagnostic device; "
               "results must not be used for clinical decisions.")
-
-RESULTS_BLOCKS = [
-    ("Preprocessing", "How should the retina be cropped and masked?",
-     FIGURES_V1 / "sec2.3_fov_crop_mask_before_after.png"),
-    ("Normalisation", "Does contrast correction help?",
-     FIGURES_V1 / "sec2.4_normalisation_candidates_per_grade.png"),
-    ("Augmentation", "Which random changes, and how strong?",
-     FIGURES_V1 / "sec3.5_augmentation_draws.png"),
-    ("Architecture", "Which backbone, and how much of it to retrain?",
-     FIGURES_V1 / "sec4.4_finetune_val_loss_accuracy.png"),
-    ("Schedule and learning rate", "Fixed rate, cut on plateau, or cosine?", None),
-    ("Resolution", "224, 380 or 512 px?",
-     FIGURES_V1 / "sec5.2_resolution_qwk_f1_speed.png"),
-    ("Loss", "Class weights, oversampling or focal loss?",
-     FIGURES_V1 / "sec5.4_final_candidates_curves.png"),
-]

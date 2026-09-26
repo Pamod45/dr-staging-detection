@@ -1,6 +1,4 @@
-"""Model comparison - pick a comparison, see models that differ in one setting.
-Tables, charts and the upload block are added in stage 4.
-"""
+"""Model comparison page."""
 import pandas as pd
 import streamlit as st
 

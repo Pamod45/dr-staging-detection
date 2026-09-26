@@ -1,9 +1,4 @@
-"""Plain-language explanation of one screening result.
-
-Deterministic: the same result always gives the same text, and every number in it comes from
-the result object. It describes what the model output, never what the eye has; it names image
-positions (upper left...), never anatomy. This text is what goes into the PDF report.
-"""
+"""Plain-language explanation built from a screening result."""
 from src import config as C
 
 

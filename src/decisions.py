@@ -1,8 +1,4 @@
-"""Grade, referral and abstention from one probability vector - three independent rules.
-
-Thresholds come from the screening model's own results.json, where the v2 notebook saved them
-after fitting on its validation set (notebook 6.5 and 6.6). Nothing here is tuned by hand.
-"""
+"""Grade, referral and abstention from one probability vector."""
 import json
 from dataclasses import dataclass
 
@@ -15,7 +11,7 @@ from src import registry
 @dataclass(frozen=True)
 class Thresholds:
     referral: float
-    abstention: float | None    # None when the run did not save one -> abstention off
+    abstention: float | None
 
 
 @dataclass(frozen=True)

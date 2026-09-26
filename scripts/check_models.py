@@ -1,8 +1,6 @@
-"""Check the models/ folder against the app's config, without starting Streamlit.
+"""Check models/ against the app config.
 
     python scripts/check_models.py
-
-Exits with code 1 if the config breaks a rule or the screening model is not ready.
 """
 import sys
 from pathlib import Path
@@ -11,6 +9,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src import config as C  # noqa: E402
 from src import registry     # noqa: E402
+from src.data import STRATEGY_HISTORY  # noqa: E402
+from src.decision_trail import TRAIL   # noqa: E402
+from src.pages_assets import FINAL_FIGURES  # noqa: E402
 
 problems = registry.validate_config()
 print("Config rules:", "OK" if not problems else "")
@@ -23,10 +24,9 @@ for r in registry.check_all():
     print(f"{flag} {r['model']:20s} {r['notebook']}  {r['input']:>4} px  {r['status']:15s}"
           f" {r['weights']:22s} {('missing: ' + r['missing']) if r['missing'] else ''}")
 
-print("\nResults page figures:")
-for title, _, fig in C.RESULTS_BLOCKS:
-    if fig is not None:
-        print(("   " if fig.exists() else "!! ") + str(fig.relative_to(C.ROOT)))
+print("\nResults page files:")
+for fig in [d.figure for d in TRAIL if d.figure] + [STRATEGY_HISTORY] + list(FINAL_FIGURES.values()):
+    print(("   " if fig.exists() else "!! ") + str(fig.relative_to(C.ROOT)))
 
 print("\nShared files:")
 for r in registry.check_shared():

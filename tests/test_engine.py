@@ -1,5 +1,4 @@
-"""Full engine on a model with random weights: wiring, Grad-CAM self-check, shapes.
-Skipped when TensorFlow is not installed. Does not test accuracy - that needs real weights."""
+"""Engine wiring on a random-weight model. Skipped without TensorFlow."""
 import json
 
 import numpy as np
@@ -28,7 +27,7 @@ def engine(tmp_path_factory):
 
 
 def test_matches_notebook_parameter_count(engine):
-    assert engine.model.count_params() == 6_253_653          # notebook 4.1 model.summary
+    assert engine.model.count_params() == 6_253_653
     assert engine.base.output.shape[1:] == (24, 24, 1280)
 
 

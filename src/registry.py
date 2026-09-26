@@ -1,7 +1,4 @@
-"""Answers one question for the rest of the app: which model files are actually on disk?
-
-No TensorFlow here - this module only looks at files, so every page can import it cheaply.
-"""
+"""File checks for model folders and shared assets."""
 from pathlib import Path
 
 from src import config as C

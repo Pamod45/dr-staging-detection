@@ -1,4 +1,4 @@
-"""Preprocessing port: geometry and masking on synthetic frames."""
+"""Preprocessing geometry and masking."""
 import numpy as np
 
 from src.preprocess import circle_mask, detect_fov, preprocess, to_model_input
@@ -19,10 +19,9 @@ def test_output_is_square_masked_and_uint8():
     out, _ = preprocess(fundus(), out=768)
     assert out.shape == (768, 768, 3) and out.dtype == np.uint8
     assert out[:8, :8].max() == 0 and out[-8:, -8:].max() == 0
-    # the resize softens the mask edge by a pixel, so allow a 1% margin (notebook checks corners only)
     assert out[~circle_mask(768, 1.01)].max() == 0
     dark = (out.max(2) == 0).mean()
-    assert 0.20 < dark < 0.30          # ~1 - pi/4 = 0.215 outside the circle, plus dark spots
+    assert 0.20 < dark < 0.30
 
 
 def test_blank_image_has_no_retina():

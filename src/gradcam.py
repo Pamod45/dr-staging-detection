@@ -1,17 +1,11 @@
-"""Grad-CAM - port of v2 notebook 6.3.
-
-The backbone is run as its own model (base.input -> base.output) and the head layers are
-applied one by one after it, so the gradient can be taken at the backbone's last feature map
-(24 x 24 x 1280 at 768 px). The notebook asserts this path gives the same probabilities as the
-full model; the engine repeats that check once per session.
-"""
+"""Grad-CAM, ported from v2 notebook section 6.3."""
 import cv2
 import numpy as np
 
 from src.preprocess import circle_mask
 
-HOT = 0.5            # a CAM cell counts as "hot" at half the maximum or above
-OVERLAY_ALPHA = 0.45  # notebook display setting
+HOT = 0.5
+OVERLAY_ALPHA = 0.45
 
 
 class GradCAM:
@@ -65,8 +59,7 @@ def _location(y: float, x: float, size: int) -> str:
 
 
 def summarise(cam: np.ndarray, size: int) -> dict:
-    """Plain numbers describing where the attention sits, for the explanation text.
-    Locations are image positions (upper left, centre...), not anatomy."""
+    """Attention share inside the retina, hot area, region count and location."""
     up = upsample(cam, size)
     retina = circle_mask(size)
     total = float(up.sum()) + 1e-8

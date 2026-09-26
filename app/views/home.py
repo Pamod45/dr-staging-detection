@@ -1,6 +1,4 @@
-"""About diabetic retinopathy - background for a non-specialist. No performance numbers here.
-Written content from content/dr_facts.md and sample images are added in stage 6.
-"""
+"""About diabetic retinopathy page."""
 import streamlit as st
 
 from src import config as C

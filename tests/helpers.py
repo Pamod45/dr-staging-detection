@@ -1,4 +1,4 @@
-"""Synthetic images and results for tests - no real data, no TensorFlow."""
+"""Synthetic images and results for tests."""
 import json
 
 import cv2
