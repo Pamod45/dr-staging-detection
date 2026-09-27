@@ -18,13 +18,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import cv2           # noqa: E402
-import numpy as np   # noqa: E402
-import pandas as pd  # noqa: E402
+import cv2           
+import numpy as np   
+import pandas as pd  
 
-from src import config as C              # noqa: E402
-from src import data                     # noqa: E402
-from src.runner import ModelRunner       # noqa: E402
+from src import config as C              
+from src import data                     
+from src.runner import ModelRunner       
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--ddr", required=True, help="folder holding the raw DDR images")

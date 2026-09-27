@@ -7,11 +7,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src import config as C  # noqa: E402
-from src import registry     # noqa: E402
-from src.data import STRATEGY_HISTORY  # noqa: E402
-from src.decision_trail import TRAIL   # noqa: E402
-from src.pages_assets import FINAL_FIGURES  # noqa: E402
+from src import config as C  
+from src import registry     
+from src.data import STRATEGY_HISTORY  
+from src.decision_trail import TRAIL   
+from src.pages_assets import FINAL_FIGURES  
 
 problems = registry.validate_config()
 print("Config rules:", "OK" if not problems else "")

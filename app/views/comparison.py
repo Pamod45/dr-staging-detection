@@ -127,6 +127,8 @@ def upload_section(comp, ids) -> None:
         outputs = {}
         try:
             for m in ids:
+                if engines.low_memory():
+                    engines.release_comparison_models()
                 with st.spinner(f"Running {C.MODELS[m].title}..."):
                     outputs[m] = engines.comparison_runner(m).run(img.image_bgr)
         except NoRetinaFound:

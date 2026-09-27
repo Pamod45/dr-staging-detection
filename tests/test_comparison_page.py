@@ -35,7 +35,7 @@ def test_each_comparison_renders(store, comp):
     at.selectbox[0].set_value(comp).run()
     assert not at.exception, at.exception
     assert not at.error, [e.value for e in at.error]
-    assert len(at.dataframe) >= 3               # setup, results, cost
+    assert len(at.dataframe) >= 3
     if not comp.live_upload:
         assert any("never ported" in i.value for i in at.info)
 

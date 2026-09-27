@@ -30,7 +30,7 @@ def test_grade_definitions_join_wrapped_lines(facts):
     defs = content.grade_definitions(facts["The five ICDR grades"])
     assert sorted(defs) == [0, 1, 2, 3, 4]
     assert defs[1][0] == "Mild" and "small red dots" in defs[1][1]
-    assert "one or more quadrant" in defs[3][1]          # last wrapped line of grade 3
+    assert "one or more quadrant" in defs[3][1]
     assert "Wilkinson" in content.after_bullets(facts["The five ICDR grades"])
 
 
@@ -61,7 +61,7 @@ def test_lesion_set_is_found_and_counted(tmp_path, monkeypatch):
     a = lesions.find()
     assert a.name == "IDRiD_99" and set(a.masks) == {"MA", "HE", "EX", "SE", "OD"}
     assert lesions.counts(a) == {"MA": 4, "HE": 2, "EX": 1, "SE": 1}
-    assert lesions.example(a, "HE") == pytest.approx((330, 300), abs=1)   # largest bleed
+    assert lesions.example(a, "HE") == pytest.approx((330, 300), abs=1)
 
 
 def test_callout_points_at_every_shown_sign(tmp_path, monkeypatch):
@@ -78,7 +78,7 @@ def test_callout_points_at_every_shown_sign(tmp_path, monkeypatch):
 def test_sets_are_found_per_grade(tmp_path, monkeypatch):
     make_lesion_set(tmp_path / "grade_2", "IDRiD_61")
     make_lesion_set(tmp_path / "grade_4", "IDRiD_17")
-    make_lesion_set(tmp_path, "IDRiD_17")               # loose files at the top are ignored
+    make_lesion_set(tmp_path, "IDRiD_17")
     monkeypatch.setattr(lesions, "LESION_DIR", tmp_path)
     sets = lesions.by_grade()
     assert {g: a.name for g, a in sets.items()} == {2: "IDRiD_61", 4: "IDRiD_17"}
@@ -109,9 +109,9 @@ def test_home_renders(tmp_path, monkeypatch):
     assert not at.exception, at.exception
     assert len(at.tabs) == 5 and len(at.image) >= 5
     captions = " ".join(c.value for c in at.caption)
-    assert captions.count("CC BY 4.0") == 3                    # one annotated figure per grade 2-4
+    assert captions.count("CC BY 4.0") == 3
     assert "IDRiD_17, graded Proliferative DR" in captions
-    assert "taken from the annotated Moderate photograph (IDRiD_61)" in captions   # Mild tab
+    assert "taken from the annotated Moderate photograph (IDRiD_61)" in captions
     assert [h.value for h in at.header][:3] == ["The five ICDR grades", "Referable or not",
                                                 "The datasets"]
 

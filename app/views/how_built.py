@@ -280,8 +280,9 @@ else:
     if img is None:
         st.error("No image to show. Upload one on the Screening page.")
     else:
-        st.caption(f"Showing the built-in sample image ({img.name}). Upload your own on the "
-                   f"Screening page to see it here." if is_sample else f"Showing {img.name}.")
+        st.caption(f"Showing the built-in sample image ({img.name}). {C.PHOTO_CREDIT} Upload "
+                   f"your own on the Screening page to see it here." if is_sample
+                   else f"Showing {img.name}.")
         tabs = st.tabs(["Preprocessing", "Augmentation and imbalance", "Architecture",
                         "Training"])
         with tabs[0]:

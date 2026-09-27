@@ -6,6 +6,8 @@ serves the model in a Streamlit app that explains its result.
 > For research and education. Not a diagnostic device; results must not be used for clinical
 > decisions.
 
+**Live app:** `<your-app>.streamlit.app` <!-- replace with the Streamlit link after deploying -->
+
 ## Notebooks
 
 - **`dr_grading_kaggle_v1/`** - the full, detailed notebook: dataset audit, preprocessing,
@@ -26,30 +28,49 @@ serves the model in a Streamlit app that explains its result.
 | Results and decisions | Why each design choice was made, final results, referral threshold |
 | Model comparison | Models that differ in one setting, side by side |
 
-## Run it
+## Run it locally
 
-Requires Python 3.11 or 3.12.
+Requires Python 3.11 or 3.12 (TensorFlow has no wheels for newer versions).
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-**Model files** are not in the repository (about 61 MB each). Put them in `models/` using the
-layout in `APP_PLAN.md`, then check:
-
-```bash
-python scripts/check_models.py
-```
-
-**Chat (optional).** Create `.streamlit/secrets.toml` with `GEMINI_API_KEY = "your-key"`. This
-file is gitignored. Without a key the app works and the chat is hidden.
-
-```bash
+python scripts/check_models.py    # every model and figure file in place?
 streamlit run app/main.py
+```
+
+The model weights are included in `models/` (13 models, plus shared labels and splits).
+
+**Chat (optional).** Create `.streamlit/secrets.toml` containing `GEMINI_API_KEY = "your-key"`.
+The file is gitignored. Without a key the app works and the chat says it is unavailable.
+
+**Tests.**
+
+```bash
 python -m pytest -q
 ```
+
+Seven of the tests run only when the real `models/` files are present; they check that the app
+reproduces the numbers the notebooks printed.
+
+## Deploy on Streamlit Community Cloud
+
+1. Push this repository to GitHub, including `models/` and `.streamlit/config.toml`
+   (never `.streamlit/secrets.toml`).
+2. At share.streamlit.io, create an app from this repository: branch `main`, main file
+   `app/main.py`.
+3. Under **Advanced settings**, choose Python **3.12** and add the secrets:
+
+   ```toml
+   GEMINI_API_KEY = "your-key"
+   LOW_MEMORY = "1"
+   ```
+
+   `LOW_MEMORY` makes the Model comparison page load one model at a time, to stay inside the
+   free tier's memory.
+4. Deploy. The first build installs TensorFlow and takes several minutes. Later changes deploy
+   with `git push`. A free app sleeps when unused; open it a few minutes before a demo.
 
 ## Scripts
 
@@ -57,10 +78,11 @@ python -m pytest -q
 - `scripts/check_screening.py --ddr <folder> --per-grade 4` - does the app reproduce the notebook
   on real test images?
 - `scripts/pick_lesion_examples.py --idrid <folder>` - finds the official grade of each IDRiD
-  segmentation image and copies one per grade for the Home page.
+  segmentation image by matching picture content, and copies one per grade for the Home page.
 
 ## Data and credits
 
-- **DDR** - Li T et al., *Information Sciences* 2019. Training, validation and internal test.
+- **DDR** - Li T et al., *Information Sciences* 2019. Training, validation and internal test;
+  the grade photographs and sample image in the app.
 - **IDRiD** - Porwal P et al., *Data* 2018, CC BY 4.0. External test set, and the
   expert-annotated lesion images on the Home page.

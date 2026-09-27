@@ -99,6 +99,7 @@ def grades_section(section: str) -> None:
             if photo:
                 st.image(photo, width="stretch")
             st.markdown(f"**Grade {g}**  \n{defs.get(g, (C.LABELS[g], ''))[0]}")
+    st.caption(C.PHOTO_CREDIT)
 
     st.subheader("Grade by grade")
     tabs = st.tabs([f"{g}. {defs.get(g, (C.LABELS[g], ''))[0]}" for g in range(C.N_CLASSES)])

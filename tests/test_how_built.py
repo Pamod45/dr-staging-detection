@@ -64,7 +64,7 @@ def test_static_diagram_needs_no_model():
     from src import cnn_diagram
     svg, width = cnn_diagram.architecture_svg(768, "dense", 0.5)
     assert "data:image" not in svg and "384 x 384 x 32" in svg and "24 x 24 x 1,280" in svg
-    assert svg.count("Fine-tuned") == 2 + 1          # two tuned stacks plus the legend
+    assert svg.count("Fine-tuned") == 2 + 1
     svg_simple, _ = cnn_diagram.architecture_svg(768, "simple", 0.5)
     assert "Dense layer" not in svg_simple
 
@@ -90,10 +90,10 @@ def test_page_renders_with_sample_image(page_store):
     assert not at.exception, at.exception
     assert any("built-in sample" in c.value for c in at.caption)
     assert len(at.tabs) == 4
-    assert len(at.image) >= 6 + 7 + 8        # preprocessing, augmentation steps, draws
+    assert len(at.image) >= 6 + 7 + 8
     text = " ".join(m.value for m in at.markdown)
-    assert "50 / 2 = 25 to 1" in text        # imbalance arithmetic from the split file
-    at.button[0].click().run()               # "Draw again"
+    assert "50 / 2 = 25 to 1" in text
+    at.button[0].click().run()
     assert not at.exception, at.exception
 
 

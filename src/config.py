@@ -107,3 +107,6 @@ COMPARISONS_BY_ID = {c.id: c for c in COMPARISONS}
 
 DISCLAIMER = ("For research and education. Not a diagnostic device; "
               "results must not be used for clinical decisions.")
+
+# Source of the grade photographs and sample image in content/samples/. Shown under them.
+PHOTO_CREDIT = "Photographs: DDR dataset (Li et al., 2019)."

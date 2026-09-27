@@ -4,15 +4,14 @@ import pytest
 
 from src import trust
 
-# six test images: true grades, and one-hot-ish predictions
 Y = np.array([2, 2, 1, 3, 0, 2])
 P = np.array([
-    [0.05, 0.05, 0.80, 0.05, 0.05],   # Moderate, right, conf 0.80
-    [0.10, 0.10, 0.65, 0.10, 0.05],   # Moderate, right, conf 0.65
-    [0.10, 0.25, 0.55, 0.05, 0.05],   # Moderate, truly Mild, conf 0.55
-    [0.02, 0.03, 0.72, 0.20, 0.03],   # Moderate, truly Severe, conf 0.72
-    [0.90, 0.05, 0.02, 0.02, 0.01],   # No DR, right, conf 0.90
-    [0.60, 0.10, 0.20, 0.05, 0.05],   # No DR, truly Moderate, conf 0.60
+    [0.05, 0.05, 0.80, 0.05, 0.05],
+    [0.10, 0.10, 0.65, 0.10, 0.05],
+    [0.10, 0.25, 0.55, 0.05, 0.05],
+    [0.02, 0.03, 0.72, 0.20, 0.03],
+    [0.90, 0.05, 0.02, 0.02, 0.01],
+    [0.60, 0.10, 0.20, 0.05, 0.05],
 ])
 
 
@@ -34,11 +33,10 @@ def test_top_band_includes_certainty():
 
 
 def test_referral_calls():
-    # referable prob: rows 0-3 >= 0.35 (0.90, 0.80, 0.65, 0.95); row 4 0.05; row 5 0.30
     r = trust.reliability(Y, P, grade=2, conf=0.7, refer=True, threshold=0.35)
-    assert (r["referral_calls"], r["referral_right"]) == (4, 3)      # row 2 was truly Mild
+    assert (r["referral_calls"], r["referral_right"]) == (4, 3)
     r = trust.reliability(Y, P, grade=0, conf=0.9, refer=False, threshold=0.35)
-    assert (r["referral_calls"], r["referral_right"]) == (2, 1)      # row 5 was truly Moderate
+    assert (r["referral_calls"], r["referral_right"]) == (2, 1)
 
 
 def test_text_says_where_numbers_come_from(tmp_path, monkeypatch):

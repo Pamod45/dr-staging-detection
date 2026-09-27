@@ -25,7 +25,7 @@ FIG_W = 760
 class Sign:
     code: str
     name: str
-    colour: str        # hex, for SVG
+    colour: str
     first_grade: int | None
     looks_like: str
 
@@ -63,8 +63,8 @@ def _hex_bgr(h: str) -> tuple:
 @dataclass
 class Annotated:
     name: str
-    image: np.ndarray            # full resolution RGB
-    masks: dict                  # code -> full resolution bool mask
+    image: np.ndarray
+    masks: dict
 
     @property
     def scale(self) -> float:

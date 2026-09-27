@@ -58,7 +58,7 @@ def test_results_page_renders_all_tabs(fake_store):
     at = _results_app()
     assert not at.exception, at.exception
     assert len(at.tabs) == 3
-    assert len(at.dataframe) >= 3          # two trail tables plus the final-model table
+    assert len(at.dataframe) >= 3
     assert any("0.35" in m.value for m in at.markdown)
 
 

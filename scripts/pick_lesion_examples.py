@@ -27,7 +27,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.preprocess import preprocess  # noqa: E402
+from src.preprocess import preprocess  
 
 LESIONS = ("MA", "HE", "EX", "SE")
 SEG_NAME = re.compile(r"^IDRiD_(\d{2})\.jpg$", re.I)

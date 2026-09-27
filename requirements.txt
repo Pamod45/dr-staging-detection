@@ -9,3 +9,4 @@ pillow>=10.0
 fpdf2>=2.7
 google-genai>=1.0
 pytest>=8
+psutil

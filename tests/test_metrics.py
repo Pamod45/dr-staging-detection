@@ -12,7 +12,7 @@ def sample():
     rng = np.random.default_rng(0)
     y = rng.integers(0, 5, 500)
     p = rng.dirichlet(np.ones(5), 500)
-    p[np.arange(250), y[:250]] += 2          # half the cases lean towards the true grade
+    p[np.arange(250), y[:250]] += 2
     return y, p / p.sum(1, keepdims=True)
 
 

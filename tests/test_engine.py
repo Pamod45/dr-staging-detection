@@ -6,8 +6,8 @@ import pytest
 
 tf = pytest.importorskip("tensorflow")
 
-from src import config as C                      # noqa: E402
-from tests.helpers import fake_model_folder, fundus  # noqa: E402
+from src import config as C                      
+from tests.helpers import fake_model_folder, fundus  
 
 
 @pytest.fixture(scope="module")
