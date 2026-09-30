@@ -1,4 +1,3 @@
-"""Screening engine: preprocess, predict, decide, Grad-CAM."""
 import time
 from dataclasses import dataclass
 

@@ -1,4 +1,3 @@
-"""UI helpers shared by all pages."""
 import streamlit as st
 
 from src import config as C

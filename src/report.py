@@ -1,4 +1,3 @@
-"""One-page PDF report for a screening result."""
 import io
 from datetime import datetime
 

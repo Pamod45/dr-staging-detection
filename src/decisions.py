@@ -1,4 +1,3 @@
-"""Grade, referral and abstention from one probability vector."""
 import json
 from dataclasses import dataclass
 

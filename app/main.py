@@ -1,4 +1,3 @@
-"""Entry point: streamlit run app/main.py"""
 import sys
 from pathlib import Path
 import shutil
@@ -12,10 +11,11 @@ if str(ROOT) not in sys.path:
 from src import ui  
 
 st.set_page_config(
-    page_title="DR grading prototype",
-    page_icon=":material/visibility:",
+    page_title="DR Assist - Diabetic Retinopathy Grading Assistant",
+    page_icon="app/assets/logo.png",
     layout="wide",
 )
+st.logo("app/assets/logo.png", size="large")
 
 pages = {
     "Start here": [

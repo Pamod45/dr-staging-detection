@@ -1,4 +1,3 @@
-"""File checks for model folders and shared assets."""
 from pathlib import Path
 
 from src import config as C

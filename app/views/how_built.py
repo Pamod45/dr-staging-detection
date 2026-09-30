@@ -1,4 +1,3 @@
-"""How it was built: four visual pipelines for the shipped v2 model, on a real image."""
 import json
 
 import altair as alt

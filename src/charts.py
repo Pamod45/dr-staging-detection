@@ -1,4 +1,3 @@
-"""Probability charts for the page and the PDF report."""
 import io
 
 import altair as alt

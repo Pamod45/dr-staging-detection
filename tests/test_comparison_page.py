@@ -81,7 +81,7 @@ def test_best_value_per_row_is_highlighted():
         "cmp", P(__file__).resolve().parents[1] / "app" / "views" / "comparison.py")
     src = spec.loader.get_data(spec.origin).decode()
     ns = {}
-    exec(src.split("def setup_section")[0], ns)        # helpers only, no page code
+    exec(src.split("def setup_section")[0], ns)
     df = pd.DataFrame({"a": [0.8, 0.5], "b": [0.9, 0.5]}, index=["QWK", "Recall Mild"])
     html = ns["highlight_best"](df).to_html()
     assert html.count("font-weight: 700") >= 1

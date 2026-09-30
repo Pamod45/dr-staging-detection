@@ -1,4 +1,3 @@
-"""Shared uploaded image and per-image cache in session state."""
 import hashlib
 from dataclasses import dataclass
 

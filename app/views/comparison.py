@@ -1,4 +1,3 @@
-"""Model comparison: models that differ in one setting, side by side."""
 import numpy as np
 import pandas as pd
 import streamlit as st

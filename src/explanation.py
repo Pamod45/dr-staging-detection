@@ -1,4 +1,3 @@
-"""Plain-language explanation built from a screening result."""
 from src import config as C
 
 
