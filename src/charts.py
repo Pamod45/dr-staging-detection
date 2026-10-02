@@ -150,3 +150,33 @@ def metric_bars(rows: list[dict], metrics_: tuple = ("QWK", "Macro F1")) -> alt.
     text = bars.mark_text(dy=-6, fontSize=11).encode(text=alt.Text("Value:Q", format=".3f"),
                                                      color=alt.value("#E3EAEE"))
     return (bars + text).properties(height=280)
+
+
+def abstention_chart(curves: dict, chosen: float, fitted: float, target: float) -> alt.Chart:
+    """Accuracy on graded images against the share graded, one line per image set, with the
+    point each set reaches at the chosen and fitted cut-offs."""
+    frames, points = [], []
+    for name, df in curves.items():
+        frames.append(df.assign(Set=name))
+        for t, label in ((fitted, "Fitted on validation"), (chosen, "Selected")):
+            row = df.iloc[(df["threshold"] - t).abs().argmin()]
+            points.append({"Set": name, "coverage": row["coverage"],
+                           "accuracy_kept": row["accuracy_kept"], "Point": label})
+    long = pd.concat(frames)
+    x = alt.X("coverage:Q", title="Share of images graded", axis=alt.Axis(format="%"),
+              scale=alt.Scale(domain=[0.3, 1]))
+    y = alt.Y("accuracy_kept:Q", title="Accuracy on graded images", axis=alt.Axis(format="%"),
+              scale=alt.Scale(zero=False))
+    lines = alt.Chart(long).mark_line().encode(
+        x=x, y=y, color=alt.Color("Set:N", legend=alt.Legend(orient="bottom", title=None)),
+        tooltip=["Set", alt.Tooltip("threshold:Q", format=".2f"),
+                 alt.Tooltip("coverage:Q", format=".1%"),
+                 alt.Tooltip("accuracy_kept:Q", format=".1%")])
+    dots = alt.Chart(pd.DataFrame(points)).mark_point(size=90, filled=True).encode(
+        x=x, y=y, color="Set:N",
+        shape=alt.Shape("Point:N", legend=alt.Legend(orient="bottom", title=None)),
+        tooltip=["Set", "Point", alt.Tooltip("coverage:Q", format=".1%"),
+                 alt.Tooltip("accuracy_kept:Q", format=".1%")])
+    goal = alt.Chart(pd.DataFrame([{"target": target}])).mark_rule(strokeDash=[4, 4]).encode(
+        y="target:Q", color=alt.value("#9AA7B0"))
+    return (lines + dots + goal).properties(height=320)

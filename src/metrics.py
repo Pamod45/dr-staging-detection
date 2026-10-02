@@ -57,3 +57,25 @@ def referral_curve(y: np.ndarray, p: np.ndarray) -> list[dict]:
     """Same 0.01-0.99 grid the notebook searched."""
     return [{"threshold": float(t), **referral(y, p, t)}
             for t in np.round(np.arange(0.01, 1.0, 0.01), 2)]
+
+
+def abstention(y: np.ndarray, p: np.ndarray, t: float) -> dict:
+    """Notebook 6.6: withhold the grade when the top probability is below t. The referral
+    decision is separate, so referable cases among the withheld still get referred."""
+    conf, yh = p.max(1), p.argmax(1)
+    kept = conf >= t
+    n_kept = int(kept.sum())
+    return {
+        "coverage": float(kept.mean()),
+        "kept": n_kept,
+        "withheld": int((~kept).sum()),
+        "accuracy_kept": float((yh[kept] == y[kept]).mean()) if n_kept else float("nan"),
+        "accuracy_all": float((yh == y).mean()),
+        "qwk_kept": qwk(y[kept], yh[kept]) if n_kept > 1 else float("nan"),
+        "referable_withheld_pct": (float(100 * (y[~kept] >= 2).mean()) if (~kept).any()
+                                   else float("nan")),
+    }
+
+
+def abstention_curve(y: np.ndarray, p: np.ndarray, thresholds) -> list[dict]:
+    return [{"threshold": float(t), **abstention(y, p, t)} for t in thresholds]

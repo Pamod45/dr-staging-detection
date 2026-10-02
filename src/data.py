@@ -65,9 +65,30 @@ def strategy_histories() -> dict[str, pd.DataFrame]:
     return out
 
 
-# IDRiD grade counts after the 27 label corrections, from the support column of the v2
-# notebook's IDRiD classification report (section 6.2). No IDRiD label file is in models/.
+# Fallback when labels_idrid.npy is absent: the support column of the v2 notebook's IDRiD
+# classification report (section 6.2), after the 27 label corrections.
 IDRID_COUNTS = {0: 118, 1: 23, 2: 164, 3: 90, 4: 60}
+
+
+def split_arrays(model_id: str, split: str):
+    """(labels, probs) the notebook saved for one split ("val", "test" or "idrid"), or None
+    when either file is missing."""
+    folder = registry.model_dir(model_id)
+    probs_file, labels_file = folder / f"probs_{split}.npy", folder / f"labels_{split}.npy"
+    if split == "test" and not labels_file.exists():
+        spec = C.MODELS[model_id]
+        labels_file = C.LABEL_FILES[(spec.notebook, spec.eval_set)]
+    if not (probs_file.exists() and labels_file.exists()):
+        return None
+    return np.load(labels_file), np.load(probs_file)
+
+
+def idrid_counts(model_id: str = C.SCREENING_MODEL_ID) -> dict:
+    arrays = split_arrays(model_id, "idrid")
+    if arrays is None:
+        return IDRID_COUNTS
+    counts = np.bincount(arrays[0], minlength=C.N_CLASSES)
+    return {g: int(n) for g, n in enumerate(counts)}
 
 
 def ddr_grade_counts() -> pd.DataFrame:

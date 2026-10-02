@@ -164,15 +164,16 @@ def datasets_section(section: str) -> None:
             ).properties(height=230, title=f"DDR, {total:,} images")
             st.altair_chart(chart, width="stretch")
     with right:
-        idr = pd.DataFrame({"Grade": [C.LABELS[g] for g in data.IDRID_COUNTS],
-                            "images": list(data.IDRID_COUNTS.values())})
+        counts = data.idrid_counts()
+        idr = pd.DataFrame({"Grade": [C.LABELS[g] for g in counts],
+                            "images": list(counts.values())})
         bars = alt.Chart(idr).mark_bar(color=charts.ACCENT).encode(
             x=alt.X("images:Q", title="Images"),
             y=alt.Y("Grade:N", sort=list(C.LABELS), title=None),
             tooltip=["Grade", "images"])
         labels = bars.mark_text(align="left", dx=4, color="#E3EAEE").encode(text="images:Q")
         st.altair_chart((bars + labels).properties(
-            height=230, title=f"IDRiD, {sum(data.IDRID_COUNTS.values())} images, external test"),
+            height=230, title=f"IDRiD, {sum(counts.values())} images, external test"),
             width="stretch")
     st.caption("The grades are far from balanced in both datasets, which is why the model was "
                "trained with focal loss. How it was built shows the details.")

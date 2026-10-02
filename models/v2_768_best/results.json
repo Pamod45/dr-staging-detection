@@ -9,6 +9,7 @@
   "best_val_acc": 0.8778711557388306,
   "gap_clean_minus_val": 0.06012884426116938,
   "referral_threshold": 0.35,
+  "abstention_threshold": 0.5387868881225586,
   "val_accuracy": 0.8778711484593837,
   "val_QWK": 0.9035588417299696,
   "val_macro F1": 0.7300568858352443,
@@ -33,6 +34,9 @@
   "test_recall Proliferative_DR": 0.7984496124031008,
   "test_referral sens @thr": 0.9361702127659575,
   "test_referral spec @thr": 0.8887765419615774,
+  "test_abstention coverage": 0.8937360178970917,
+  "test_abstention accuracy kept": 0.9073842302878599,
+  "test_abstention missed refs": 56,
   "idrid_accuracy": 0.6681318681318681,
   "idrid_QWK": 0.7621497129897004,
   "idrid_macro F1": 0.6049032927696251,
@@ -45,5 +49,8 @@
   "idrid_recall Severe": 0.4666666666666667,
   "idrid_recall Proliferative_DR": 0.45,
   "idrid_referral sens @thr": 0.9936305732484076,
-  "idrid_referral spec @thr": 0.5602836879432624
+  "idrid_referral spec @thr": 0.5602836879432624,
+  "idrid_abstention coverage": 0.8241758241758241,
+  "idrid_abstention accuracy kept": 0.704,
+  "idrid_abstention missed refs": 2
 }

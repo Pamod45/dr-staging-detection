@@ -1,4 +1,4 @@
-"""Results page renders its three tabs from stored files, with synthetic data."""
+"""Results page renders its four tabs from stored files, with synthetic data."""
 import json
 from pathlib import Path
 
@@ -33,6 +33,15 @@ def fake_store(tmp_path, monkeypatch):
                                                  "Proliferative_DR")}})
     p = np.eye(5)[y2] * 0.6 + 0.08
     np.save(d / "probs_test.npy", p / p.sum(1, keepdims=True))
+    for split, n in (("val", 1785), ("idrid", 455)):
+        ys = rng.integers(0, 5, n)
+        ps = rng.dirichlet(np.ones(5), n)
+        ps[np.arange(n), ys] += rng.uniform(0, 2, n)
+        np.save(d / f"labels_{split}.npy", ys)
+        np.save(d / f"probs_{split}.npy", ps / ps.sum(1, keepdims=True))
+    res = json.loads((d / "results.json").read_text())
+    res["abstention_threshold"] = 0.5388
+    (d / "results.json").write_text(json.dumps(res))
     ep = np.arange(1, 11)
     (d / "history.csv").write_text("epoch,val_qwk,val_accuracy,clean_accuracy\n" + "\n".join(
         f"{e},{0.7 + e / 100},{0.7 + e / 120},{0.75 + e / 100}" for e in ep))
@@ -57,7 +66,7 @@ def _results_app():
 def test_results_page_renders_all_tabs(fake_store):
     at = _results_app()
     assert not at.exception, at.exception
-    assert len(at.tabs) == 3
+    assert len(at.tabs) == 4
     assert len(at.dataframe) >= 3
     assert any("0.35" in m.value for m in at.markdown)
 
@@ -75,3 +84,26 @@ def test_results_page_without_models_shows_error(tmp_path, monkeypatch):
     at = _results_app()
     assert not at.exception, at.exception
     assert any("could not be found" in e.value for e in at.error)
+
+
+def test_abstention_tab(fake_store):
+    at = _results_app()
+    assert not at.exception, at.exception
+    labels = [m.label for m in at.metric]
+    assert "Share graded" in labels and "Withheld" in labels
+    assert any("0.5388" in m.value for m in at.markdown)
+    before = [m.value for m in at.metric]
+    at.select_slider[0].set_value(0.9).run()
+    assert not at.exception, at.exception
+    assert [m.value for m in at.metric] != before
+
+
+def test_abstention_tab_without_threshold(fake_store):
+    import json as _json
+    f = fake_store / C.SCREENING_MODEL_ID / "results.json"
+    res = _json.loads(f.read_text())
+    del res["abstention_threshold"]
+    f.write_text(_json.dumps(res))
+    at = _results_app()
+    assert not at.exception, at.exception
+    assert any("every image is given a grade" in i.value for i in at.info)

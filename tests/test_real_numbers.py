@@ -61,3 +61,28 @@ def test_reliability_counts_add_up_on_real_data():
         assert r["grade_calls"] == sum(r["grade_truths"].values()) == int((p.argmax(1) == g).sum())
     r = trust.reliability(y, p, 2, 0.75, True, 0.35)
     assert r["referral_calls"] == 858    # 47.99% of 1,788 referred at 0.35, notebook 6.5
+
+
+
+@needs("v2_768_best")
+@pytest.mark.parametrize("split,coverage,acc_kept,withheld", [("val", 0.8975, 0.9114, 183),
+                                                             ("test", 0.8937, 0.9074, 190),
+                                                             ("idrid", 0.8242, 0.7040, 80)])
+def test_abstention_matches_notebook_6_6(split, coverage, acc_kept, withheld):
+    arrays = data.split_arrays("v2_768_best", split)
+    if arrays is None:
+        pytest.skip(f"probs_{split}.npy or labels_{split}.npy not in models/v2_768_best")
+    t = data.run_results("v2_768_best")["abstention_threshold"]
+    r = metrics.abstention(*arrays, t)
+    assert r["coverage"] == pytest.approx(coverage, abs=5e-5)
+    assert r["accuracy_kept"] == pytest.approx(acc_kept, abs=5e-5)
+    assert r["withheld"] == withheld
+
+
+@needs("v2_768_best")
+def test_live_idrid_numbers_match_notebook():
+    if data.split_arrays("v2_768_best", "idrid") is None:
+        pytest.skip("labels_idrid.npy not in models/v2_768_best")
+    assert data.idrid_counts() == {0: 118, 1: 23, 2: 164, 3: 90, 4: 60}
+    s = metrics.summary(*data.split_arrays("v2_768_best", "idrid"))
+    assert s["QWK"] == pytest.approx(0.7621, abs=5e-5)

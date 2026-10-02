@@ -25,7 +25,7 @@ serves the model in a Streamlit app that explains its result.
 | About diabetic retinopathy | The five grades, expert-annotated lesions per grade, referral, datasets |
 | Screening | Grade, confidence, referral, Grad-CAM, explanation, PDF report, chat |
 | How it was built | Preprocessing, augmentation, architecture and training, on a real image |
-| Results and decisions | Why each design choice was made, final results, referral threshold |
+| Results and decisions | Why each design choice was made, final results, referral and abstention thresholds |
 | Model comparison | Models that differ in one setting, side by side |
 
 ## Run it locally
@@ -51,8 +51,8 @@ The file is gitignored. Without a key the app works and the chat says it is unav
 python -m pytest -q
 ```
 
-Seven of the tests run only when the real `models/` files are present; they check that the app
-reproduces the numbers the notebooks printed.
+Eleven of the tests run only when the real `models/` files are present; they check that the app
+reproduces the numbers the notebooks printed, including the referral and abstention results.
 
 ## Deploy on Streamlit Community Cloud
 

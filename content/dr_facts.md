@@ -88,12 +88,16 @@ On the DDR test set (1,788 images):
   are graded Moderate instead.
 - Referral at the 0.35 threshold: 93.6% of referable cases referred (sensitivity), 88.9% of
   non-referable cases correctly not referred (specificity); 51 referable cases missed.
+- Abstention at 53.88% confidence: 190 of 1,788 test images (10.6%) are not graded. Accuracy on
+  the graded ones is 90.7%, against 86.9% on all images.
 
 On IDRiD (455 images, different clinic and camera):
 - Accuracy 0.6681 and QWK 0.7621, lower than on DDR, as expected for images unlike the
   training set.
 - Referral sensitivity 99.4% but specificity 56.0%: the model misses almost no referable
   cases but refers many images that did not need it.
+- Abstention: 80 of 455 images (17.6%) are not graded, and accuracy on the graded ones is only
+  70.4%. The cut-off was fitted on DDR images and does not carry over fully to another camera.
 
 # What this tool does not do
 
@@ -104,9 +108,10 @@ On IDRiD (455 images, different clinic and camera):
 - It does not assess diabetic macular oedema or any other eye disease, such as glaucoma or
   cataract.
 - It does not check that an upload is a retinal photograph, or that the photograph is good
-  enough to grade. Any image gets a grade, even one that is not an eye.
-- It does not withhold uncertain grades: every image is given a grade, however low the
-  confidence.
+  enough to grade. An image that is not an eye can still be given a grade.
+- It does not grade every image. When the model's highest probability is below 53.88%, the
+  grade is withheld and the image should be graded by a person. The referral decision is still
+  made for those images.
 - Its heatmap (Grad-CAM) shows broad regions that influenced the grade, not individual lesions.
   Each heatmap cell covers a 32 x 32 pixel patch of the image.
 - It was trained on photographs from Chinese hospitals and tested externally on one Indian

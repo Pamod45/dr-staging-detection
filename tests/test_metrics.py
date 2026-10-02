@@ -49,3 +49,16 @@ def test_referral_counts():
     r = metrics.referral(y, p, 0.35)
     assert r["missed"] == 1 and r["sensitivity"] == pytest.approx(2 / 3)
     assert r["specificity"] == 1.0 and r["referred_pct"] == pytest.approx(40.0)
+
+
+def test_abstention_counts():
+    y = np.array([0, 2, 2, 1])
+    p = np.array([[0.9, 0.05, 0.03, 0.01, 0.01],     # kept, right
+                  [0.1, 0.1, 0.6, 0.1, 0.1],         # kept, right
+                  [0.3, 0.35, 0.2, 0.1, 0.05],       # withheld, referable
+                  [0.1, 0.2, 0.55, 0.1, 0.05]])      # kept, wrong
+    r = metrics.abstention(y, p, 0.5)
+    assert (r["kept"], r["withheld"]) == (3, 1)
+    assert r["accuracy_kept"] == pytest.approx(2 / 3) and r["accuracy_all"] == 0.5
+    assert r["referable_withheld_pct"] == 100.0
+    assert metrics.abstention(y, p, 0.0)["coverage"] == 1.0
