@@ -11,7 +11,7 @@ from src import config as C
 from src import registry     
 from src.data import STRATEGY_HISTORY  
 from src.decision_trail import TRAIL   
-from src.pages_assets import FINAL_FIGURES  
+from src.pages_assets import DIAGRAMS, FINAL_FIGURES  
 
 problems = registry.validate_config()
 print("Config rules:", "OK" if not problems else "")
@@ -24,8 +24,9 @@ for r in registry.check_all():
     print(f"{flag} {r['model']:20s} {r['notebook']}  {r['input']:>4} px  {r['status']:15s}"
           f" {r['weights']:22s} {('missing: ' + r['missing']) if r['missing'] else ''}")
 
-print("\nResults page files:")
-for fig in [d.figure for d in TRAIL if d.figure] + [STRATEGY_HISTORY] + list(FINAL_FIGURES.values()):
+print("\nPage files:")
+for fig in ([d.figure for d in TRAIL if d.figure] + [STRATEGY_HISTORY]
+            + list(FINAL_FIGURES.values()) + list(DIAGRAMS.values())):
     print(("   " if fig.exists() else "!! ") + str(fig.relative_to(C.ROOT)))
 
 print("\nShared files:")

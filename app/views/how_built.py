@@ -5,10 +5,11 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from src import charts, cnn_diagram, data, diagrams, engines, features, registry, state, ui
+from src import charts, cnn_diagram, data, engines, features, registry, state, ui
 from src import config as C
 from src.augment import AugSettings, augment, augment_steps
 from src.explanation import pct
+from src.pages_assets import DIAGRAM_WIDTH, DIAGRAMS
 from src.preprocess import draw_fov, preprocess_steps
 
 MODEL = C.SCREENING_MODEL_ID
@@ -46,9 +47,13 @@ def model_view(raw: bytes):
     return result, maps, head
 
 
-@st.cache_data(show_spinner=False)
-def trainable_counts():
-    return features.trainable_counts(engines.screening_engine())
+def diagram(name: str) -> bool:
+    """Show one of the static pipeline diagrams. Returns False if its file is missing."""
+    path = DIAGRAMS[name]
+    if not path.exists():
+        return False
+    st.html(cnn_diagram.svg_img(path.read_text(encoding="utf-8"), DIAGRAM_WIDTH))
+    return True
 
 
 @st.cache_data
@@ -62,6 +67,8 @@ def rgb(bgr: np.ndarray) -> np.ndarray:
 
 
 def preprocessing_tab(img, size: int) -> None:
+    if diagram("preprocessing"):
+        st.markdown("#### The same steps on this image")
     steps = steps_for(img.raw, size)
     if steps is None:
         st.error("No retina could be found in this image, so there are no steps to show.")
@@ -193,8 +200,9 @@ def architecture_tab(img, cfg: dict) -> None:
         "step deeper halves the size of the feature maps and adds more of them, trading position "
         f"detail for richer patterns: {size} px in, {size // 32} x {size // 32} maps at the end. "
         "Pooling then turns those maps into one list of numbers for the new layers to grade.")
-    svg, width = cnn_diagram.architecture_svg(size, head_type, unfreeze)
-    st.html(cnn_diagram.svg_img(svg, width))
+    if not diagram("architecture"):
+        svg, width = cnn_diagram.architecture_svg(size, head_type, unfreeze)
+        st.html(cnn_diagram.svg_img(svg, width))
 
     st.markdown("#### The same network on this image")
     try:
@@ -228,15 +236,8 @@ def architecture_tab(img, cfg: dict) -> None:
 
 def training_tab(cfg: dict) -> None:
     res = data.run_results(MODEL)
-    try:
-        counts = trainable_counts()
-    except Exception as err:
-        st.error(f"The model could not be loaded: {err}")
-        return
-    st.html(diagrams.phases(
-        int(cfg["PHASE1_EPOCHS"]), float(cfg["PHASE1_LR"]), int(res["epochs_run"]),
-        int(res["best_epoch"]), float(cfg["PHASE2_LR"]), counts, float(cfg["RLR_FACTOR"]),
-        int(cfg["RLR_PATIENCE"]), int(cfg["ES_PATIENCE"])))
+    diagram("training")
+    st.markdown("#### How the run actually went")
 
     hist = data.history(MODEL)
     switch, best = int(cfg["PHASE1_EPOCHS"]) + 0.5, int(res["best_epoch"])
@@ -253,13 +254,6 @@ def training_tab(cfg: dict) -> None:
         if "val_qwk" in hist:
             st.altair_chart(charts.training_curves(hist, {"val_qwk": "Validation QWK"},
                                                    switch, best, "QWK"), width="stretch")
-    if "learning_rate" in hist:
-        lr = alt.Chart(hist).mark_line(point=True, interpolate="step-after").encode(
-            x=alt.X("epoch:Q", title="Epoch"),
-            y=alt.Y("learning_rate:Q", title="Learning rate", scale=alt.Scale(type="log")),
-            tooltip=["epoch", alt.Tooltip("learning_rate:Q", format=".1e")])
-        st.markdown("**Learning rate**")
-        st.altair_chart(lr.properties(height=180), width="stretch")
     st.caption("Training accuracy on augmented images sits below the same images unchanged, "
                "because augmentation makes them harder. The gap between unchanged training "
                "images and validation shows how much the model fits the training set.")

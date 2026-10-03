@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 770" width="1600" height="770" font-family="Carlito, Calibri, 'Liberation Sans', Arial, sans-serif"><defs>
+  <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#8A99A3"/></marker>
+  <radialGradient id="fun" cx="45%" cy="45%" r="60%">
+    <stop offset="0%" stop-color="#F2B36B"/><stop offset="70%" stop-color="#D98B3F"/><stop offset="100%" stop-color="#9C5223"/></radialGradient>
+</defs><rect width="1600" height="770" fill="#10171C"/><rect x="200.0" y="30" width="219.3548387096774" height="56" rx="6" fill="#222A4A" stroke="#8C9EF0" stroke-width="1.6"/>
+<text x="309.6774193548387" y="55" font-size="19" font-weight="700" fill="#E3EAEE" text-anchor="middle">Phase 1</text>
+<text x="309.6774193548387" y="76" font-size="16" font-weight="400" fill="#9AA7B0" text-anchor="middle">head warm-up</text>
+<rect x="419.35483870967744" y="30" width="1140.6451612903224" height="56" rx="6" fill="#12393A" stroke="#3CC2B5" stroke-width="1.6"/>
+<text x="989.6774193548387" y="55" font-size="19" font-weight="700" fill="#E3EAEE" text-anchor="middle">Phase 2</text>
+<text x="989.6774193548387" y="76" font-size="16" font-weight="400" fill="#9AA7B0" text-anchor="middle">fine-tuning, allowed up to 30 epochs (to epoch 35), stopped early at epoch 31</text>
+<text x="30" y="140" font-size="18" font-weight="700" fill="#E3EAEE" text-anchor="start">Backbone</text>
+<text x="30" y="198" font-size="18" font-weight="700" fill="#E3EAEE" text-anchor="start">Trainable</text>
+<text x="30" y="248" font-size="18" font-weight="700" fill="#E3EAEE" text-anchor="start">Optimiser</text>
+<text x="30" y="298" font-size="18" font-weight="700" fill="#E3EAEE" text-anchor="start">Loss, data</text>
+<rect x="206.0" y="118" width="207.3548387096774" height="36" rx="4" fill="#2A343C" stroke="#5C6B75" stroke-width="1.4"/>
+<text x="309.6774193548387" y="142" font-size="16" font-weight="400" fill="#E3EAEE" text-anchor="middle">fully frozen</text>
+<rect x="425.35483870967744" y="118" width="564.3225806451612" height="36" rx="4" fill="#2A343C" stroke="#5C6B75" stroke-width="1.4"/>
+<rect x="989.6774193548387" y="118" width="564.3225806451612" height="36" rx="4" fill="#12393A" stroke="#3CC2B5" stroke-width="1.4"/>
+<text x="707.516129032258" y="142" font-size="16" font-weight="400" fill="#E3EAEE" text-anchor="middle">layers 1–135 frozen</text>
+<text x="1271.8387096774193" y="142" font-size="16" font-weight="400" fill="#E3EAEE" text-anchor="middle">layers 136–270 trainable</text>
+<text x="309.6774193548387" y="198" font-size="17" font-weight="400" fill="#E3EAEE" text-anchor="middle">331,781 (5.3%)</text>
+<text x="989.6774193548387" y="198" font-size="17" font-weight="400" fill="#E3EAEE" text-anchor="middle">4,941,037 (79.0%)</text>
+<text x="309.6774193548387" y="248" font-size="17" font-weight="400" fill="#E3EAEE" text-anchor="middle">Adam, lr 1e-3</text>
+<text x="989.6774193548387" y="248" font-size="17" font-weight="400" fill="#E3EAEE" text-anchor="middle">Adam, starting lr 1e-4, reduce on plateau</text>
+<text x="880.0" y="298" font-size="17" font-weight="400" fill="#E3EAEE" text-anchor="middle">Focal loss (γ = 2) in both phases, batch size 16, 560 steps per epoch, augmented training images</text>
+<text x="30" y="362" font-size="18" font-weight="700" fill="#E3EAEE" text-anchor="start">Learning rate</text>
+<text x="30" y="384" font-size="15" font-weight="400" fill="#9AA7B0" text-anchor="start" font-style="italic">(log scale)</text>
+<line x1="200" y1="355.0428919423799" x2="1560" y2="355.0428919423799" stroke="#2A343C" stroke-width="1"/>
+<text x="190" y="360.0428919423799" font-size="15" font-weight="400" fill="#9AA7B0" text-anchor="end">1e-3</text>
+<line x1="200" y1="405.0142973141267" x2="1560" y2="405.0142973141267" stroke="#2A343C" stroke-width="1"/>
+<text x="190" y="410.0142973141267" font-size="15" font-weight="400" fill="#9AA7B0" text-anchor="end">1e-4</text>
+<line x1="200" y1="454.9857026858733" x2="1560" y2="454.9857026858733" stroke="#2A343C" stroke-width="1"/>
+<text x="190" y="459.9857026858733" font-size="15" font-weight="400" fill="#9AA7B0" text-anchor="end">1e-5</text>
+<line x1="200" y1="504.95710805762" x2="1560" y2="504.95710805762" stroke="#2A343C" stroke-width="1"/>
+<text x="190" y="509.95710805762" font-size="15" font-weight="400" fill="#9AA7B0" text-anchor="end">1e-6</text>
+<path d="M200.0,355.0 L419.4,355.0 L419.4,405.0 L1121.3,405.0 L1121.3,431.1 L1209.0,431.1 L1209.0,457.3 L1428.4,457.3 L1428.4,483.4 L1516.1,483.4 L1516.1,509.5 L1560.0,509.5" fill="none" stroke="#3CC2B5" stroke-width="3"/>
+<text x="770.3225806451613" y="396.0142973141267" font-size="14" font-weight="700" fill="#3CC2B5" text-anchor="middle">1e-4</text>
+<text x="1165.1612903225805" y="422.1432830548007" font-size="14" font-weight="700" fill="#3CC2B5" text-anchor="middle">3e-5</text>
+<text x="1252.9032258064515" y="448.2722687954747" font-size="14" font-weight="700" fill="#3CC2B5" text-anchor="middle">9e-6</text>
+<text x="1472.258064516129" y="474.40125453614877" font-size="14" font-weight="700" fill="#3CC2B5" text-anchor="middle">2.7e-6</text>
+<text x="1538.0645161290322" y="500.5302402768228" font-size="14" font-weight="700" fill="#3CC2B5" text-anchor="middle">8.1e-7</text>
+<text x="287.741935483871" y="346.0428919423799" font-size="14" font-weight="700" fill="#8C9EF0" text-anchor="middle">1e-3</text>
+<path d="M1114.2903225806451,534 L1128.2903225806451,534 L1121.2903225806451,522 z" fill="#E0A84A"/>
+<path d="M1202.0322580645159,534 L1216.0322580645159,534 L1209.0322580645159,522 z" fill="#E0A84A"/>
+<path d="M1421.3870967741934,534 L1435.3870967741934,534 L1428.3870967741934,522 z" fill="#E0A84A"/>
+<path d="M1509.1290322580644,534 L1523.1290322580644,534 L1516.1290322580644,522 z" fill="#E0A84A"/>
+<text x="1109.2903225806451" y="554" font-size="15" font-weight="400" fill="#E0A84A" text-anchor="end">lr × 0.3 after 2 epochs without a val-loss improvement (epochs 21, 23, 28, 30)</text>
+<line x1="200" y1="590" x2="1560" y2="590" stroke="#E3EAEE" stroke-width="1.5"/>
+<line x1="221.93548387096774" y1="590" x2="221.93548387096774" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="265.80645161290323" y1="590" x2="265.80645161290323" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="309.6774193548387" y1="590" x2="309.6774193548387" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="353.54838709677415" y1="590" x2="353.54838709677415" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="397.41935483870964" y1="590" x2="397.41935483870964" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="441.2903225806451" y1="590" x2="441.2903225806451" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="485.1612903225806" y1="590" x2="485.1612903225806" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="529.0322580645161" y1="590" x2="529.0322580645161" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="572.9032258064516" y1="590" x2="572.9032258064516" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="616.7741935483871" y1="590" x2="616.7741935483871" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="660.6451612903226" y1="590" x2="660.6451612903226" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="704.516129032258" y1="590" x2="704.516129032258" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="748.3870967741935" y1="590" x2="748.3870967741935" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="792.258064516129" y1="590" x2="792.258064516129" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="836.1290322580645" y1="590" x2="836.1290322580645" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="880.0" y1="590" x2="880.0" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="923.8709677419354" y1="590" x2="923.8709677419354" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="967.7419354838709" y1="590" x2="967.7419354838709" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1011.6129032258063" y1="590" x2="1011.6129032258063" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1055.483870967742" y1="590" x2="1055.483870967742" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1099.3548387096773" y1="590" x2="1099.3548387096773" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1143.2258064516127" y1="590" x2="1143.2258064516127" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1187.0967741935483" y1="590" x2="1187.0967741935483" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1230.967741935484" y1="590" x2="1230.967741935484" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1274.8387096774193" y1="590" x2="1274.8387096774193" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1318.7096774193546" y1="590" x2="1318.7096774193546" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1362.5806451612902" y1="590" x2="1362.5806451612902" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1406.4516129032256" y1="590" x2="1406.4516129032256" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1450.3225806451612" y1="590" x2="1450.3225806451612" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1494.1935483870966" y1="590" x2="1494.1935483870966" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<line x1="1538.0645161290322" y1="590" x2="1538.0645161290322" y2="596" stroke="#E3EAEE" stroke-width="1"/>
+<text x="221.93548387096774" y="614" font-size="15" font-weight="400" fill="#E3EAEE" text-anchor="middle">1</text>
+<text x="397.41935483870964" y="614" font-size="15" font-weight="400" fill="#E3EAEE" text-anchor="middle">5</text>
+<text x="441.2903225806451" y="614" font-size="15" font-weight="400" fill="#E3EAEE" text-anchor="middle">6</text>
+<text x="616.7741935483871" y="614" font-size="15" font-weight="400" fill="#E3EAEE" text-anchor="middle">10</text>
+<text x="836.1290322580645" y="614" font-size="15" font-weight="400" fill="#E3EAEE" text-anchor="middle">15</text>
+<text x="1055.483870967742" y="614" font-size="15" font-weight="400" fill="#E3EAEE" text-anchor="middle">20</text>
+<text x="1318.7096774193546" y="614" font-size="15" font-weight="700" fill="#E3EAEE" text-anchor="middle">26</text>
+<text x="1538.0645161290322" y="614" font-size="15" font-weight="700" fill="#E3EAEE" text-anchor="middle">31</text>
+<text x="30" y="596" font-size="18" font-weight="700" fill="#E3EAEE" text-anchor="start">Epoch</text>
+<line x1="419.35483870967744" y1="30" x2="419.35483870967744" y2="590" stroke="#8A99A3" stroke-width="1.5" stroke-dasharray="6 5"/>
+<line x1="1318.7096774193546" y1="334" x2="1318.7096774193546" y2="590" stroke="#8C9EF0" stroke-width="2"/>
+<polygon points="1318.7,621.0 1321.9,629.6 1331.1,630.0 1323.9,635.7 1326.4,644.5 1318.7,639.5 1311.1,644.5 1313.5,635.7 1306.3,630.0 1315.5,629.6" fill="#8C9EF0"/>
+<path d="M1340.6451612903224,634 L1559.9999999999998,634" stroke="#8A99A3" stroke-width="1.5"/>
+<path d="M1340.6451612903224,628 L1340.6451612903224,640 M1559.9999999999998,628 L1559.9999999999998,640" stroke="#8A99A3" stroke-width="1.5"/>
+<text x="1450.3225806451612" y="658" font-size="15" font-weight="400" fill="#9AA7B0" text-anchor="middle">patience 5, then stop</text>
+<text x="1298.7096774193546" y="640" font-size="16" font-weight="700" fill="#8C9EF0" text-anchor="end">best epoch 26 restored: lowest val loss 0.1733 and highest val QWK 0.9036</text>
+<rect x="30" y="700" width="755" height="50" rx="6" fill="#1A242B" stroke="#4A5862" stroke-width="1.4"/>
+<text x="407" y="731" font-size="16" font-weight="400" fill="#E3EAEE" text-anchor="middle">Every epoch: score the validation set (1,785) and an unaugmented clean-train subset (500)</text>
+<rect x="805" y="700" width="755" height="50" rx="6" fill="#1A242B" stroke="#4A5862" stroke-width="1.4"/>
+<text x="1182" y="731" font-size="16" font-weight="400" fill="#E3EAEE" text-anchor="middle">Checkpoints saved for best val loss and best val QWK, both selected epoch 26</text></svg>

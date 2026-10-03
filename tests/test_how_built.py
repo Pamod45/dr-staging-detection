@@ -104,3 +104,21 @@ def test_page_without_model_files(tmp_path, monkeypatch):
     at.switch_page("views/how_built.py").run()
     assert not at.exception, at.exception
     assert any("could not be found" in e.value for e in at.error)
+
+
+def test_pipeline_diagrams_are_dark_and_complete():
+    from src.pages_assets import DIAGRAMS
+    for name, path in DIAGRAMS.items():
+        svg = path.read_text(encoding="utf-8")
+        assert svg.startswith("<svg") and 'viewBox="0 0 1600' in svg, name
+        assert '"#FFFFFF"' not in svg and '"#1E2A38"' not in svg, name   # no light-theme colours left
+    assert "withheld below 53.88%" in DIAGRAMS["architecture"].read_text(encoding="utf-8")
+
+
+def test_page_shows_the_three_diagrams(page_store):
+    at = AppTest.from_file(MAIN, default_timeout=120)
+    at.run()
+    at.switch_page("views/how_built.py").run()
+    assert not at.exception, at.exception
+    html = " ".join(str(h.proto.body) for h in at.get("html"))
+    assert html.count("data:image/svg+xml") >= 3
