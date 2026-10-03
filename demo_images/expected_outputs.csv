@@ -1,0 +1,6 @@
+file,source,set,true grade,app shows,referral,confidence,referable prob
+1_no_dr.jpg,20170430193829449.jpg,DDR test,No DR,No DR,No referral,0.9983,0.0017
+2_mild_but_referred.jpg,007-2145-100.jpg,DDR test,Moderate,Mild,Refer,0.6091,0.3692
+3_not_graded.jpg,007-3480-200.jpg,DDR test,Moderate,Not graded,Refer,0.3575,0.3575
+4_idrid_severe.jpg,IDRiD_026.jpg,IDRiD,Severe,Severe,Refer,0.94,1.0
+5_severe.jpg,007-5885-300.jpg,DDR test,Severe,Severe,Refer,0.9584,1.0

@@ -6,15 +6,15 @@ serves the model in a Streamlit app that explains its result.
 > For research and education. Not a diagnostic device; results must not be used for clinical
 > decisions.
 
-**Live app:** `<your-app>.streamlit.app` <!-- replace with the Streamlit link after deploying -->
+**Live app:** `https://dr-grader.streamlit.app/`
 
 ## Notebooks
 
-- **`dr_grading_kaggle_v1/`** - the full, detailed notebook: dataset audit, preprocessing,
+- **`Exploration Notebook dr_grading_kaggle_v1/`** - the full, detailed notebook: dataset audit, preprocessing,
   augmentation, architecture selection and training-strategy experiments (schedule, resolution,
   class balancing), each measured before a decision is made. Final model: EfficientNetV2-B0,
   512 px, focal loss. DDR test QWK 0.860, IDRiD external QWK 0.770.
-- **`dr_grading_kaggle_v2_minimal/`** - a leaner rebuild that adopts v1's decisions directly and
+- **`Final Notebook dr_grading_kaggle_v2_minimal/`** - a leaner rebuild that adopts v1's decisions directly and
   adds a 768 px cache and an optional EyePACS merge for rare grades. Four training runs. Best run
   (`04_full_dense_none_focal_768`), used by the app: DDR test QWK 0.887, IDRiD external QWK 0.762.
 
