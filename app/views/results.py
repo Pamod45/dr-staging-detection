@@ -28,7 +28,14 @@ def referral_table(model_id: str) -> pd.DataFrame:
 @st.cache_data
 def split_summary(model_id: str, split: str) -> dict | None:
     arrays = data.split_arrays(model_id, split)
-    return None if arrays is None else metrics.summary(*arrays)
+    summary = None if arrays is None else metrics.summary(*arrays)
+    stored = data.stored_summary(model_id, split)
+    if summary is None:
+        return stored
+    auc = data.run_results(model_id).get(f"{split}_referable AUC")
+    if auc is not None:
+        summary["Referable ROC-AUC"] = float(auc)
+    return summary
 
 
 @st.cache_data
@@ -86,11 +93,16 @@ def final_tab() -> None:
         return
     spec = C.MODELS[FINAL]
     res = data.run_results(FINAL)
-    st.caption(f"{spec.title}. DDR numbers are on its {C.EVAL_SET_TEXT['test']}; IDRiD is 455 "
+    st.caption(f"{spec.title}. DDR validation was used for checkpoint selection and threshold "
+               f"fitting; DDR test is the held-out {C.EVAL_SET_TEXT['test']}. IDRiD is 455 "
                "images from a different hospital and camera, never used in training.")
 
-    cols = {"DDR test": model_summary(FINAL)}
-    idrid = split_summary(FINAL, "idrid") or data.stored_summary(FINAL, "idrid")
+    cols = {}
+    validation = split_summary(FINAL, "val")
+    if validation:
+        cols["DDR validation"] = validation
+    cols["DDR test"] = split_summary(FINAL, "test") or model_summary(FINAL)
+    idrid = split_summary(FINAL, "idrid")
     if idrid:
         cols["IDRiD (external)"] = idrid
     st.dataframe(metrics_table(cols), width="stretch")

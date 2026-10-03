@@ -26,8 +26,11 @@ def fake_store(tmp_path, monkeypatch):
 
     y2 = np.load(labels[("v2", "test")])
     d = fake_model_folder(tmp_path, results={"referral_threshold": 0.35, "best_epoch": 8,
+                                             "val_referable AUC": 0.91,
+                                             "test_referable AUC": 0.92,
                                              "idrid_accuracy": 0.66, "idrid_QWK": 0.76,
                                              "idrid_macro F1": 0.6,
+                                             "idrid_referable AUC": 0.93,
                                              **{f"idrid_recall {n}": 0.5 for n in
                                                 ("No_DR", "Mild", "Moderate", "Severe",
                                                  "Proliferative_DR")}})
@@ -68,6 +71,9 @@ def test_results_page_renders_all_tabs(fake_store):
     assert not at.exception, at.exception
     assert len(at.tabs) == 4
     assert len(at.dataframe) >= 3
+    table = next(frame.value for frame in at.dataframe
+                 if "DDR validation" in frame.value.columns)
+    assert list(table.loc["Referable ROC-AUC"]) == ["0.9100", "0.9200", "0.9300"]
     assert any("0.35" in m.value for m in at.markdown)
 
 

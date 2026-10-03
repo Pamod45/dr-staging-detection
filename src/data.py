@@ -48,6 +48,9 @@ def stored_summary(model_id: str, split: str) -> dict | None:
         return None
     out = {"Accuracy": res[f"{split}_accuracy"], "QWK": res[f"{split}_QWK"],
            "Macro F1": res[f"{split}_macro F1"]}
+    auc = res.get(f"{split}_referable AUC")
+    if auc is not None:
+        out["Referable ROC-AUC"] = auc
     out.update({f"Recall {C.LABELS[i]}": res[f"{split}_recall {nb}"]
                 for i, nb in enumerate(_NB_LABELS)})
     return out
